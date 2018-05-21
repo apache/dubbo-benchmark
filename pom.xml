@@ -26,6 +26,8 @@
         <module>benchmark-base</module>
         <module>dubbo-kryo-client</module>
         <module>dubbo-kryo-server</module>
+        <module>dubbo-hessianlite-client</module>
+        <module>dubbo-hessianlite-server</module>
     </modules>
 
     <dependencies>

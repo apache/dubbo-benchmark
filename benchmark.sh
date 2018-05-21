@@ -1,39 +1,29 @@
 #!/usr/bin/env bash
 
-PROGRAM_NAME=$0
-TASK=$1
-PROFILE=$2
-
-if [ ! -d "${TASK}" ]; then
-    usage
-fi
-
 usage() {
-    echo "Usage: ${PROGRAM_NAME} directory-name {profiling|benchmark}"
-    echo "run in benchmark mode by default if mode is not specified."
-    exit 2
+    echo "Usage: ${PROGRAM_NAME} -m {profiling|benchmark} -s hostname -p port dirname"
 }
 
 build() {
-    mvn clean package
+    mvn -Dserver.host=${SERVER} -Dserver.port=${PORT} --projects benchmark-base,${PROJECT_DIR} clean package
 }
 
-options() {
+java_options() {
     JAVA_OPTIONS="-server -Xmx1g -Xms1g -XX:MaxDirectMemorySize=1g -XX:+UseG1GC"
-    if [ "x${PROFILE}" = "xprofiling" ]; then
+    if [ "x${MODE}" = "xprofiling" ]; then
         JAVA_OPTIONS="${JAVA_OPTIONS} \
 -XX:+UnlockCommercialFeatures \
 -XX:+FlightRecorder \
--XX:StartFlightRecording=duration=30s,filename=${TASK}.jfr \
+-XX:StartFlightRecording=duration=30s,filename=${PROJECT_DIR}.jfr \
 -XX:FlightRecorderOptions=stackdepth=256"
     fi
 }
 
 run() {
-    if [ -d "${TASK}/target" ]; then
-        JAR=`find ${TASK}/target/*.jar | head -n 1`
+    if [ -d "${PROJECT_DIR}/target" ]; then
+        JAR=`find ${PROJECT_DIR}/target/*.jar | head -n 1`
         echo
-        echo "RUN ${TASK} IN ${PROFILE:-benchmark} MODE"
+        echo "RUN ${PROJECT_DIR} IN ${MODE:-benchmark} MODE"
         CMD="java ${JAVA_OPTIONS} -jar ${JAR}"
         echo "command is: ${CMD}"
         echo
@@ -41,8 +31,40 @@ run() {
     fi
 }
 
+PROGRAM_NAME=$0
+MODE="benchmark"
+SERVER="localhost"
+PORT="8080"
+OPTIND=1
+
+while getopts "h?m:s:p:" opt; do
+    case "$opt" in
+        h|\?)
+            usage
+            exit 0
+            ;;
+        m)
+            MODE=${OPTARG}
+            ;;
+        s)
+            SERVER=${OPTARG}
+            ;;
+        p)
+            PORT=${OPTARG}
+            ;;
+    esac
+done
+
+shift $((OPTIND-1))
+PROJECT_DIR=$1
+
+if [ ! -d "${PROJECT_DIR}" ]; then
+    usage
+    exit 0
+fi
+
 build
-options
+java_options
 run
 
 
