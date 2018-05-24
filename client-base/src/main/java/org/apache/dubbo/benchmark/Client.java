@@ -86,7 +86,7 @@ public class Client extends AbstractClient {
                 .measurementIterations(3)
                 .measurementTime(TimeValue.seconds(10))
                 .threads(CONCURRENCY)
-                .resultFormat(ResultFormatType.JSON)
+//                .resultFormat(ResultFormatType.JSON)
                 .forks(1)
                 .build();
 

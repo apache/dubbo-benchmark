@@ -16,6 +16,7 @@
         <netty.version>4.1.25.Final</netty.version>
         <kryo.version>4.0.2</kryo.version>
         <kryo-serializers.version>0.42</kryo-serializers.version>
+        <fst.version>2.48-jdk-6</fst.version>
         <jmh.version>1.21</jmh.version>
         <slf4j.version>1.7.25</slf4j.version>
         <logback.version>1.2.3</logback.version>
@@ -24,10 +25,14 @@
 
     <modules>
         <module>benchmark-base</module>
+        <module>client-base</module>
         <module>dubbo-kryo-client</module>
         <module>dubbo-kryo-server</module>
         <module>dubbo-hessianlite-client</module>
         <module>dubbo-hessianlite-server</module>
+        <module>dubbo-fst-client</module>
+        <module>dubbo-fst-server</module>
+        <module>server-base</module>
     </modules>
 
     <dependencies>
@@ -86,6 +91,12 @@
             </dependency>
 
             <dependency>
+                <groupId>de.ruedigermoeller</groupId>
+                <artifactId>fst</artifactId>
+                <version>${fst.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.openjdk.jmh</groupId>
                 <artifactId>jmh-core</artifactId>
                 <version>${jmh.version}</version>
@@ -119,6 +130,44 @@
     </dependencyManagement>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>3.1.0</version>
+                    <executions>
+                        <execution>
+                            <id>copy-dependencies</id>
+                            <phase>prepare-package</phase>
+                            <goals>
+                                <goal>copy-dependencies</goal>
+                            </goals>
+                            <configuration>
+                                <outputDirectory>
+                                    ${project.build.directory}/libs
+                                </outputDirectory>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.1.0</version>
+                    <configuration>
+                        <archive>
+                            <manifest>
+                                <addClasspath>true</addClasspath>
+                                <classpathPrefix>libs/</classpathPrefix>
+                            </manifest>
+                        </archive>
+                    </configuration>
+                </plugin>
+            </plugins>
+
+        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

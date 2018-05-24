@@ -9,13 +9,17 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>dubbo-hessianlite-client</artifactId>
-
+    <artifactId>dubbo-fst-server</artifactId>
     <dependencies>
         <dependency>
             <groupId>org.apache.dubbo</groupId>
-            <artifactId>client-base</artifactId>
+            <artifactId>server-base</artifactId>
             <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>de.ruedigermoeller</groupId>
+            <artifactId>fst</artifactId>
         </dependency>
     </dependencies>
 
@@ -32,7 +36,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.apache.dubbo.benchmark.Client</mainClass>
+                            <mainClass>org.apache.dubbo.benchmark.Server</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

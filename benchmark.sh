@@ -5,7 +5,7 @@ usage() {
 }
 
 build() {
-    mvn -Dserver.host=${SERVER} -Dserver.port=${PORT} --projects benchmark-base,${PROJECT_DIR} clean package
+    mvn --projects benchmark-base,client-base,server-base,${PROJECT_DIR} clean package
 }
 
 java_options() {
@@ -24,7 +24,7 @@ run() {
         JAR=`find ${PROJECT_DIR}/target/*.jar | head -n 1`
         echo
         echo "RUN ${PROJECT_DIR} IN ${MODE:-benchmark} MODE"
-        CMD="java ${JAVA_OPTIONS} -jar ${JAR}"
+        CMD="java ${JAVA_OPTIONS} -Dserver.host=${SERVER} -Dserver.port=${PORT} -jar ${JAR}"
         echo "command is: ${CMD}"
         echo
         ${CMD}

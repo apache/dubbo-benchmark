@@ -10,9 +10,9 @@
     </appender>
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logs/dubbo-hessianlite-server.log</file>
+        <file>logs/server-benchmark.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logs/dubbo-hessianlite-server.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+            <fileNamePattern>logs/server-benchmark.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
         </rollingPolicy>
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
