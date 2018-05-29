@@ -17,6 +17,7 @@
         <kryo.version>4.0.2</kryo.version>
         <kryo-serializers.version>0.42</kryo-serializers.version>
         <fst.version>2.48-jdk-6</fst.version>
+        <native-hessian.version>1.0-SNAPSHOT</native-hessian.version>
         <jmh.version>1.21</jmh.version>
         <slf4j.version>1.7.25</slf4j.version>
         <logback.version>1.2.3</logback.version>
@@ -25,6 +26,7 @@
 
     <modules>
         <module>benchmark-base</module>
+        <module>server-base</module>
         <module>client-base</module>
         <module>dubbo-kryo-client</module>
         <module>dubbo-kryo-server</module>
@@ -32,7 +34,8 @@
         <module>dubbo-hessianlite-server</module>
         <module>dubbo-fst-client</module>
         <module>dubbo-fst-server</module>
-        <module>server-base</module>
+        <module>dubbo-native-hessian-client</module>
+        <module>dubbo-native-hessian-server</module>
     </modules>
 
     <dependencies>
@@ -94,6 +97,12 @@
                 <groupId>de.ruedigermoeller</groupId>
                 <artifactId>fst</artifactId>
                 <version>${fst.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo-serialization-native-hessian</artifactId>
+                <version>${native-hessian.version}</version>
             </dependency>
 
             <dependency>

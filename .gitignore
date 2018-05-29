@@ -33,3 +33,6 @@ hs_err_pid*
 
 # jmh output
 *.json
+
+# dubbo-serialization-native-hessian git repo
+dubbo-serialization-native-hessian/
