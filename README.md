@@ -28,8 +28,8 @@ Clone this project onto your desktop, then
 ./benchmark.sh dubbo-kryo-client
 ```
 
-## Specify hostname and port for service
+## Specify hostname, port and output file for service
 
 ```bash
-./benchmark.sh -s [hostname|ip address] -p port
+./benchmark.sh -s [hostname|ip address] -p port -f output
 ```

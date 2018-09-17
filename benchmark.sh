@@ -1,7 +1,13 @@
 #!/usr/bin/env bash
 
 usage() {
-    echo "Usage: ${PROGRAM_NAME} -m {profiling|benchmark} -s hostname -p port dirname"
+    echo "Usage: ${PROGRAM_NAME} command dirname"
+    echo "command: [m|s|p|f]"
+    echo "         -m [profiling|benchmark], specify benchmark mode"
+    echo "         -s hostname, host name"
+    echo "         -p port, port number"
+    echo "         -f output file path"
+    echo "dirname: test module name"
 }
 
 build() {
@@ -18,10 +24,10 @@ java_options() {
     JAVA_OPTIONS="-server -Xmx1g -Xms1g -XX:MaxDirectMemorySize=1g -XX:+UseG1GC"
     if [ "x${MODE}" = "xprofiling" ]; then
         JAVA_OPTIONS="${JAVA_OPTIONS} \
--XX:+UnlockCommercialFeatures \
--XX:+FlightRecorder \
--XX:StartFlightRecording=duration=30s,filename=${PROJECT_DIR}.jfr \
--XX:FlightRecorderOptions=stackdepth=256"
+            -XX:+UnlockCommercialFeatures \
+            -XX:+FlightRecorder \
+            -XX:StartFlightRecording=duration=30s,filename=${PROJECT_DIR}.jfr \
+            -XX:FlightRecorderOptions=stackdepth=256"
     fi
 }
 
@@ -30,7 +36,7 @@ run() {
         JAR=`find ${PROJECT_DIR}/target/*.jar | head -n 1`
         echo
         echo "RUN ${PROJECT_DIR} IN ${MODE:-benchmark} MODE"
-        CMD="java ${JAVA_OPTIONS} -Dserver.host=${SERVER} -Dserver.port=${PORT} -jar ${JAR}"
+        CMD="java ${JAVA_OPTIONS} -Dserver.host=${SERVER} -Dserver.port=${PORT} -Dbenchmark.output=${OUTPUT} -jar ${JAR}"
         echo "command is: ${CMD}"
         echo
         ${CMD}
@@ -41,14 +47,11 @@ PROGRAM_NAME=$0
 MODE="benchmark"
 SERVER="localhost"
 PORT="8080"
+OUTPUT=""
 OPTIND=1
 
-while getopts "h?m:s:p:" opt; do
+while getopts "m:s:p:f:" opt; do
     case "$opt" in
-        h|\?)
-            usage
-            exit 0
-            ;;
         m)
             MODE=${OPTARG}
             ;;
@@ -57,6 +60,13 @@ while getopts "h?m:s:p:" opt; do
             ;;
         p)
             PORT=${OPTARG}
+            ;;
+        f)
+            OUTPUT=${OPTARG}
+            ;;
+        ?)
+            usage
+            exit 0
             ;;
     esac
 done
