@@ -1,6 +1,7 @@
 package org.apache.dubbo.benchmark;
 
 import com.alibaba.dubbo.config.ProtocolConfig;
+
 import org.apache.dubbo.benchmark.bean.Page;
 import org.apache.dubbo.benchmark.bean.User;
 import org.apache.dubbo.benchmark.rpc.AbstractClient;
@@ -12,8 +13,8 @@ import org.openjdk.jmh.annotations.OutputTimeUnit;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.TearDown;
-import org.openjdk.jmh.results.format.ResultFormatType;
 import org.openjdk.jmh.runner.Runner;
+import org.openjdk.jmh.runner.options.ChainedOptionsBuilder;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
@@ -42,8 +43,8 @@ public class Client extends AbstractClient {
 
     @TearDown
     public void close() throws IOException {
-        context.close();
         ProtocolConfig.destroyAll();
+        context.close();
     }
 
     @Benchmark
@@ -79,17 +80,26 @@ public class Client extends AbstractClient {
     }
 
     public static void main(String[] args) throws Exception {
-        Options opt = new OptionsBuilder()
+        Options opt;
+        ChainedOptionsBuilder optBuilder = new OptionsBuilder()
                 .include(Client.class.getSimpleName())
                 .warmupIterations(3)
                 .warmupTime(TimeValue.seconds(10))
                 .measurementIterations(3)
                 .measurementTime(TimeValue.seconds(10))
                 .threads(CONCURRENCY)
-//                .resultFormat(ResultFormatType.JSON)
-                .forks(1)
-                .build();
+                .forks(1);
+
+        opt = doOptions(optBuilder).build();
 
         new Runner(opt).run();
+    }
+
+    private static ChainedOptionsBuilder doOptions(ChainedOptionsBuilder optBuilder) {
+        String output = System.getProperty("benchmark.output");
+        if (output != null && !output.trim().isEmpty()) {
+            optBuilder.output(output);
+        }
+        return optBuilder;
     }
 }
