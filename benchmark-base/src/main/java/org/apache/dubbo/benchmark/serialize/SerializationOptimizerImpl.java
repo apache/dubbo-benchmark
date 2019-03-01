@@ -1,9 +1,9 @@
 package org.apache.dubbo.benchmark.serialize;
 
-import com.alibaba.dubbo.common.serialize.support.SerializationOptimizer;
 import org.apache.dubbo.benchmark.bean.Page;
 import org.apache.dubbo.benchmark.bean.User;
 import org.apache.dubbo.benchmark.service.UserService;
+import org.apache.dubbo.common.serialize.support.SerializationOptimizer;
 
 import java.util.Arrays;
 import java.util.Collection;

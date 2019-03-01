@@ -19,11 +19,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>dubbo</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
         </dependency>
@@ -48,4 +43,29 @@
             <artifactId>jmh-generator-annprocess</artifactId>
         </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>snapshot</id>
+            <dependencies>
+                <dependency>
+                    <groupId>com.github.apache.incubator-dubbo</groupId>
+                    <artifactId>dubbo</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>release</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.dubbo</groupId>
+                    <artifactId>dubbo</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 </project>
