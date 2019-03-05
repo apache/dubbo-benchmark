@@ -34,8 +34,12 @@ Clone this project onto your desktop, then
 ./benchmark.sh -s [hostname|ip address] -p port -f output
 ```
 
-## Run with docker
+## Specify commit id
+Default dubbo version for benchmark is 2.7.0, if want to benchmark latest version of specify commit id
+Use commit id as parameter.
+
 ```bash
-docker run -v "$PWD:/tmp" openjdk java -server -Xmx1g -Xms1g -XX:MaxDirectMemorySize=1g -XX:+UseG1GC -jar /tmp/dubbo-kryo-server/target/dubbo-kryo-server-1.0-SNAPSHOT.jar
-docker run  -v "$PWD:/tmp" -e server.host=172.17.0.3 openjdk java -server -Xmx1g -Xms1g -XX:MaxDirectMemorySize=1g -XX:+UseG1GC -jar /tmp/dubbo-kryo-client/target/dubbo-kryo-client-1.0-SNAPSHOT.jar
+./benchmark.sh -c 25f2d4c900b545ae32a61333637a5a2c375a05ba dubbo-kryo-server
+./benchmark.sh -c 25f2d4c900b545ae32a61333637a5a2c375a05ba dubbo-kryo-client
+
 ```

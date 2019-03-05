@@ -7,6 +7,7 @@ usage() {
     echo "         -s hostname, host name"
     echo "         -p port, port number"
     echo "         -f output file path"
+    echo "         -c commit id"
     echo "dirname: test module name"
 }
 
@@ -14,10 +15,10 @@ build() {
     if [ ! -d dubbo-serialization-native-hessian ] && [[ ${PROJECT_DIR} = *native-hessian* ]]; then
         git clone https://github.com/dubbo/dubbo-serialization-native-hessian.git
         pushd dubbo-serialization-native-hessian
-        mvn clean install
+        mvn ${MVN_APPEND_COMMAND} clean install
         popd
     fi
-    mvn --projects benchmark-base,client-base,server-base,${PROJECT_DIR} clean package
+    mvn --projects benchmark-base,client-base,server-base,${PROJECT_DIR} ${MVN_APPEND_COMMAND} clean package
 }
 
 java_options() {
@@ -49,8 +50,9 @@ SERVER="localhost"
 PORT="8080"
 OUTPUT=""
 OPTIND=1
+MVN_APPEND_COMMAND=""
 
-while getopts "m:s:p:f:" opt; do
+while getopts "m:s:p:f:c:" opt; do
     case "$opt" in
         m)
             MODE=${OPTARG}
@@ -63,6 +65,8 @@ while getopts "m:s:p:f:" opt; do
             ;;
         f)
             OUTPUT=${OPTARG}
+            ;;
+        c)  MVN_APPEND_COMMAND="-Psnapshot -Ddubbo.commit=${OPTARG}"
             ;;
         ?)
             usage
