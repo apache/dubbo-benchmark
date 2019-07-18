@@ -1,5 +1,9 @@
 package org.apache.dubbo.benchmark;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Option;
 import org.apache.dubbo.benchmark.bean.Page;
 import org.apache.dubbo.benchmark.bean.User;
 import org.apache.dubbo.benchmark.rpc.AbstractClient;
@@ -77,19 +81,37 @@ public class Client extends AbstractClient {
     }
 
     public static void main(String[] args) throws Exception {
+        System.out.println(args);
+        org.apache.commons.cli.Options options = new org.apache.commons.cli.Options();
+
+        options.addOption(Option.builder().longOpt("warmupIterations").hasArg().build());
+        options.addOption(Option.builder().longOpt("warmupTime").hasArg().build());
+        options.addOption(Option.builder().longOpt("measurementIterations").hasArg().build());
+        options.addOption(Option.builder().longOpt("measurementTime").hasArg().build());
+
+        CommandLineParser parser = new DefaultParser();
+
+        CommandLine line = parser.parse(options, args);
+
+        int warmupIterations = Integer.valueOf(line.getOptionValue("warmupIterations", "3"));
+        int warmupTime = Integer.valueOf(line.getOptionValue("warmupTime", "10"));
+        int measurementIterations = Integer.valueOf(line.getOptionValue("measurementIterations", "3"));
+        int measurementTime = Integer.valueOf(line.getOptionValue("measurementTime", "10"));
+
         Options opt;
         ChainedOptionsBuilder optBuilder = new OptionsBuilder()
                 .include(Client.class.getSimpleName())
-                .warmupIterations(3)
-                .warmupTime(TimeValue.seconds(10))
-                .measurementIterations(3)
-                .measurementTime(TimeValue.seconds(10))
+                .warmupIterations(warmupIterations)
+                .warmupTime(TimeValue.seconds(warmupTime))
+                .measurementIterations(measurementIterations)
+                .measurementTime(TimeValue.seconds(measurementTime))
                 .threads(CONCURRENCY)
                 .forks(1);
 
         opt = doOptions(optBuilder).build();
 
         new Runner(opt).run();
+
     }
 
     private static ChainedOptionsBuilder doOptions(ChainedOptionsBuilder optBuilder) {

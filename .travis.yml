@@ -1,0 +1,12 @@
+language: java
+
+jdk:
+  - openjdk8
+
+install: true
+
+script:
+  - mvn clean package -DskipTests=true -pl benchmark-base,client-base,server-base
+  - ./benchmark.sh dubbo-kryo-server &
+  - sleep 20
+  - ./benchmark.sh -a "--warmupIterations=1 --warmupTime=1 --measurementIterations=1 --measurementTime=3" dubbo-kryo-client
