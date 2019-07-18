@@ -22,7 +22,6 @@
         <slf4j.version>1.7.25</slf4j.version>
         <logback.version>1.2.3</logback.version>
         <junit.version>4.12</junit.version>
-        <dubbo.commit>-SNAPSHOT</dubbo.commit>
     </properties>
 
     <modules>
@@ -40,6 +39,10 @@
     </modules>
 
     <dependencies>
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>io.netty</groupId>
@@ -64,18 +67,6 @@
                 <groupId>org.apache.dubbo</groupId>
                 <artifactId>dubbo</artifactId>
                 <version>${dubbo.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.jboss.netty</groupId>
-                        <artifactId>netty</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-
-            <dependency>
-                <groupId>com.github.apache.incubator-dubbo</groupId>
-                <artifactId>dubbo</artifactId>
-                <version>${dubbo.commit}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.jboss.netty</groupId>
@@ -199,72 +190,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <id>snapshot</id>
-
-            <repositories>
-                <repository>
-                    <id>jitpack.io</id>
-                    <url>https://jitpack.io</url>
-                </repository>
-            </repositories>
-
-            <dependencies>
-                <dependency>
-                    <groupId>com.github.apache.incubator-dubbo</groupId>
-                    <artifactId>dubbo</artifactId>
-                </dependency>
-            </dependencies>
-
-            <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-dependency-plugin</artifactId>
-                            <version>3.1.1</version>
-                            <executions>
-                                <execution>
-                                    <id>copy-snapshot</id>
-                                    <phase>prepare-package</phase>
-                                    <goals>
-                                        <goal>copy</goal>
-                                    </goals>
-                                    <configuration>
-                                        <artifactItems>
-                                            <artifactItem>
-                                                <groupId>com.github.apache.incubator-dubbo</groupId>
-                                                <artifactId>dubbo</artifactId>
-                                                <type>jar</type>
-                                                <overWrite>true</overWrite>
-                                                <destFileName>dubbo-${dubbo.version}.jar</destFileName>
-                                            </artifactItem>
-                                        </artifactItems>
-                                        <outputDirectory>
-                                            ${project.build.directory}/libs
-                                        </outputDirectory>
-                                    </configuration>
-                                </execution>
-                            </executions>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
-            </build>
-        </profile>
-        <profile>
-            <id>release</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-
-            <dependencies>
-                <dependency>
-                    <groupId>org.apache.dubbo</groupId>
-                    <artifactId>dubbo</artifactId>
-                </dependency>
-            </dependencies>
-        </profile>
-    </profiles>
 </project>

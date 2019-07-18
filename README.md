@@ -33,13 +33,3 @@ Clone this project onto your desktop, then
 ```bash
 ./benchmark.sh -s [hostname|ip address] -p port -f output
 ```
-
-## Specify commit id
-Default dubbo version for benchmark is 2.7.0, if want to benchmark latest version of specify commit id
-Use commit id as parameter.
-
-```bash
-./benchmark.sh -c 25f2d4c900b545ae32a61333637a5a2c375a05ba dubbo-kryo-server
-./benchmark.sh -c 25f2d4c900b545ae32a61333637a5a2c375a05ba dubbo-kryo-client
-
-```
