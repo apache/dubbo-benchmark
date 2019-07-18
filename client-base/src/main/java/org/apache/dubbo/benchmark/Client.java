@@ -1,7 +1,5 @@
 package org.apache.dubbo.benchmark;
 
-import com.alibaba.dubbo.config.ProtocolConfig;
-
 import org.apache.dubbo.benchmark.bean.Page;
 import org.apache.dubbo.benchmark.bean.User;
 import org.apache.dubbo.benchmark.rpc.AbstractClient;
@@ -43,7 +41,6 @@ public class Client extends AbstractClient {
 
     @TearDown
     public void close() throws IOException {
-        ProtocolConfig.destroyAll();
         context.close();
     }
 
