@@ -7,6 +7,7 @@ usage() {
     echo "         -s hostname, host name"
     echo "         -p port, port number"
     echo "         -f output file path"
+    echo "         -a other args"
     echo "dirname: test module name"
 }
 
@@ -36,7 +37,7 @@ run() {
         JAR=`find ${PROJECT_DIR}/target/*.jar | head -n 1`
         echo
         echo "RUN ${PROJECT_DIR} IN ${MODE:-benchmark} MODE"
-        CMD="java ${JAVA_OPTIONS} -Dserver.host=${SERVER} -Dserver.port=${PORT} -Dbenchmark.output=${OUTPUT} -jar ${JAR}"
+        CMD="java ${JAVA_OPTIONS} -Dserver.host=${SERVER} -Dserver.port=${PORT} -Dbenchmark.output=${OUTPUT} -jar ${JAR} ${OTHERARGS}"
         echo "command is: ${CMD}"
         echo
         ${CMD}
@@ -49,8 +50,9 @@ SERVER="localhost"
 PORT="8080"
 OUTPUT=""
 OPTIND=1
+OTHERARGS=""
 
-while getopts "m:s:p:f:" opt; do
+while getopts "m:s:p:f:a:" opt; do
     case "$opt" in
         m)
             MODE=${OPTARG}
@@ -63,6 +65,9 @@ while getopts "m:s:p:f:" opt; do
             ;;
         f)
             OUTPUT=${OPTARG}
+            ;;
+        a)
+            OTHERARGS=${OPTARG}
             ;;
         ?)
             usage
