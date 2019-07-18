@@ -1,5 +1,7 @@
 # Dubbo Benchmark
 
+[![Build Status](https://travis-ci.org/apache/dubbo-benchmark.svg?branch=master)](https://travis-ci.org/apache/dubbo-benchmark)
+
 This project focuses on benchmarking and profiling dubbo framework with the combination of different serialization and transporter options. The code and the idea behinds it is inspired by [RPC Benchmark](https://github.com/hank-whu/rpc-benchmark). 
 
 ## How To Run Benchmark

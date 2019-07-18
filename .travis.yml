@@ -6,8 +6,8 @@ jdk:
 install: true
 
 script:
+  - mvn clean install -DskipTests=true -pl benchmark-base,client-base,server-base
   - mvn clean package -DskipTests=true -pl dubbo-kryo-server
   - ./benchmark.sh dubbo-kryo-server &
   - sleep 20
   - ./benchmark.sh -a "--warmupIterations=1 --warmupTime=1 --measurementIterations=1 --measurementTime=3" dubbo-kryo-client
-  - pkill -f benchmark.sh
