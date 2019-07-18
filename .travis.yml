@@ -3,6 +3,8 @@ language: java
 jdk:
   - openjdk8
 
+install: true
+
 script:
   - mvn clean package -DskipTests=true -pl dubbo-kryo-server
   - ./benchmark.sh dubbo-kryo-server &
