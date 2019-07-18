@@ -1,6 +1,9 @@
 package org.apache.dubbo.benchmark;
 
-import org.apache.commons.cli.*;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Option;
 import org.apache.dubbo.benchmark.bean.Page;
 import org.apache.dubbo.benchmark.bean.User;
 import org.apache.dubbo.benchmark.rpc.AbstractClient;
