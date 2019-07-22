@@ -20,7 +20,8 @@
 
         <dependency>
             <groupId>org.apache.dubbo</groupId>
-            <artifactId>dubbo-serialization-native-hessian</artifactId>
+            <artifactId>dubbo-serialization-native-hession</artifactId>
+            <version>${dubbo.version}</version>
         </dependency>
     </dependencies>
 

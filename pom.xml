@@ -17,7 +17,6 @@
         <kryo.version>4.0.2</kryo.version>
         <kryo-serializers.version>0.42</kryo-serializers.version>
         <fst.version>2.48-jdk-6</fst.version>
-        <native-hessian.version>1.0-SNAPSHOT</native-hessian.version>
         <jmh.version>1.21</jmh.version>
         <slf4j.version>1.7.25</slf4j.version>
         <logback.version>1.2.3</logback.version>
@@ -39,9 +38,11 @@
     </modules>
 
     <dependencies>
+
         <dependency>
             <groupId>org.apache.dubbo</groupId>
             <artifactId>dubbo</artifactId>
+            <version>${dubbo.version}</version>
         </dependency>
 
         <dependency>
@@ -65,14 +66,10 @@
             <!-- use netty 4 by default -->
             <dependency>
                 <groupId>org.apache.dubbo</groupId>
-                <artifactId>dubbo</artifactId>
+                <artifactId>dubbo-dependencies-bom</artifactId>
                 <version>${dubbo.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.jboss.netty</groupId>
-                        <artifactId>netty</artifactId>
-                    </exclusion>
-                </exclusions>
+               <type>pom</type>
+                <scope>import</scope>
             </dependency>
 
             <dependency>
@@ -97,12 +94,6 @@
                 <groupId>de.ruedigermoeller</groupId>
                 <artifactId>fst</artifactId>
                 <version>${fst.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.dubbo</groupId>
-                <artifactId>dubbo-serialization-native-hessian</artifactId>
-                <version>${native-hessian.version}</version>
             </dependency>
 
             <dependency>
@@ -134,6 +125,11 @@
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
                 <version>${logback.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo-serialization-native-hessian</artifactId>
+                <version>${dubbo.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
