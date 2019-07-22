@@ -9,21 +9,15 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>dubbo-native-hessian-server</artifactId>
+    <artifactId>dubbo-fastjson-server</artifactId>
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.dubbo</groupId>
-            <artifactId>server-base</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.dubbo</groupId>
-            <artifactId>dubbo-serialization-native-hession</artifactId>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.58</version>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -44,5 +38,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

@@ -35,6 +35,14 @@
         <module>dubbo-fst-server</module>
         <module>dubbo-native-hessian-client</module>
         <module>dubbo-native-hessian-server</module>
+        <module>dubbo-avro-server</module>
+        <module>dubbo-avro-client</module>
+        <module>dubbo-fastjson-client</module>
+        <module>dubbo-fastjson-server</module>
+        <module>dubbo-protostuff-server</module>
+        <module>dubbo-protostuff-client</module>
+        <module>dubbo-gson-server</module>
+        <module>dubbo-gson-client</module>
     </modules>
 
     <dependencies>
@@ -128,7 +136,7 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.dubbo</groupId>
-                <artifactId>dubbo-serialization-native-hessian</artifactId>
+                <artifactId>dubbo-serialization-native-hession</artifactId>
                 <version>${dubbo.version}</version>
             </dependency>
         </dependencies>
