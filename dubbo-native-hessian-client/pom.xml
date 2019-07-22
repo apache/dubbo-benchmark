@@ -17,12 +17,14 @@
             <artifactId>client-base</artifactId>
             <version>${project.version}</version>
         </dependency>
-
         <dependency>
-            <groupId>org.apache.dubbo</groupId>
-            <artifactId>dubbo-serialization-native-hession</artifactId>
-            <version>${dubbo.version}</version>
+            <groupId>com.caucho</groupId>
+            <artifactId>hessian</artifactId>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.apache.dubbo</groupId>-->
+<!--            <artifactId>dubbo-serialization-native-hession</artifactId>-->
+<!--        </dependency>-->
     </dependencies>
 
     <build>

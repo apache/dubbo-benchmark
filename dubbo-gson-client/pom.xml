@@ -11,6 +11,13 @@
 
     <artifactId>dubbo-gson-client</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>client-base</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
     <build>
         <plugins>
             <plugin>

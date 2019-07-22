@@ -12,12 +12,6 @@ usage() {
 }
 
 build() {
-    if [ ! -d dubbo-serialization-native-hessian ] && [[ ${PROJECT_DIR} = *native-hessian* ]]; then
-        git clone https://github.com/dubbo/dubbo-serialization-native-hessian.git
-        pushd dubbo-serialization-native-hessian
-        mvn clean install
-        popd
-    fi
     mvn --projects benchmark-base,client-base,server-base,${PROJECT_DIR} clean package
 }
 

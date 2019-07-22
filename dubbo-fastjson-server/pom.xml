@@ -13,6 +13,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>server-base</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>1.2.58</version>

@@ -18,10 +18,15 @@
             <version>${project.version}</version>
         </dependency>
 
+
         <dependency>
-            <groupId>org.apache.dubbo</groupId>
-            <artifactId>dubbo-serialization-native-hession</artifactId>
+            <groupId>com.caucho</groupId>
+            <artifactId>hessian</artifactId>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.apache.dubbo</groupId>-->
+<!--            <artifactId>dubbo-serialization-native-hession</artifactId>-->
+<!--        </dependency>-->
     </dependencies>
 
     <build>

@@ -13,6 +13,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>client-base</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>1.2.58</version>
@@ -31,7 +36,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.apache.dubbo.benchmark.Server</mainClass>
+                            <mainClass>org.apache.dubbo.benchmark.Client</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class User implements Serializable {
+
     private static final long serialVersionUID = 2566816725396650300L;
 
     private long id;

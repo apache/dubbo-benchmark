@@ -12,6 +12,11 @@
     <artifactId>dubbo-protostuff-server</artifactId>
 
     <dependencies>
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>server-base</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <!-- Protostuff -->
         <dependency>
             <groupId>io.protostuff</groupId>
