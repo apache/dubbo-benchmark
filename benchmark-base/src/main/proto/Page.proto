@@ -1,0 +1,52 @@
+syntax = "proto3";
+package org.apache.dubbo.benchmark.bean;
+
+import public "google/protobuf/timestamp.proto";
+option java_package = "org.apache.dubbo.benchmark.bean";
+
+// PagePB是最外层的类，其中的message都变成了该类的内部类
+option java_outer_classname = "PagePB";
+
+//### 编译只会生成message，service生成需要借助grpc这样的插件
+message Page {
+    repeated User users = 1;
+    int32 pageNo = 2;
+    int32 total = 3;
+}
+
+message User {
+    int64 id = 1;
+    string name = 2;
+    int32 sex = 3;
+    google.protobuf.Timestamp birthday = 4;
+    string email = 5;
+    string mobile = 6;
+    string address = 7;
+    string icon = 8;
+    repeated int32 permissions = 9;
+    int32 status = 10;
+    google.protobuf.Timestamp createTime = 11;
+    google.protobuf.Timestamp updateTime = 12;
+
+}
+message Request {
+    int64 id = 1;
+    int32 page = 2;
+    User user = 3;
+    string email = 4;
+
+}
+
+message Response {
+    bool state = 1;
+    User user = 2;
+    Page page = 3;
+}
+
+service UserService {
+    rpc existUser (Request) returns (Response);
+    rpc createUser (Request) returns (Response);
+    rpc getUser (Request) returns (Response);
+    rpc listUser (Request) returns (Response);
+
+}

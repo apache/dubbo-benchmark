@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>dubbo-native-hessian-client</artifactId>
+    <artifactId>dubbo-gson-client</artifactId>
 
     <dependencies>
         <dependency>
@@ -17,28 +17,17 @@
             <artifactId>client-base</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.caucho</groupId>
-            <artifactId>hessian</artifactId>
-        </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.apache.dubbo</groupId>-->
-<!--            <artifactId>dubbo-serialization-native-hession</artifactId>-->
-<!--        </dependency>-->
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <inherited>true</inherited>
             </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <inherited>true</inherited>
                 <configuration>
                     <archive>
                         <manifest>
@@ -49,6 +38,4 @@
             </plugin>
         </plugins>
     </build>
-
-
 </project>
