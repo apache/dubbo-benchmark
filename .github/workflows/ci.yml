@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        target: [ "dubbo-kryo","dubbo-fst" ]
+        target: [ "dubbo-avro","dubbo-fastjson","dubbo-grpc","dubbo-gson","dubbo-hessianlite","dubbo-kryo","dubbo-native-hessian","dubbo-pb","dubbo-protobuf-json","dubbo-protostuff" ]
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 8
