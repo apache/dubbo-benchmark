@@ -1,6 +1,6 @@
 name: CI
 
-on: [push]
+on: [ push ]
 
 jobs:
   build:
@@ -16,6 +16,8 @@ jobs:
         with:
           java-version: '8'
           distribution: 'adopt'
+      - name: Prepare base
+        run: mvn clean package -DskipTests=true -pl benchmark-base,client-base,server-base
       - name: Start server
         run: ./benchmark.sh ${{ matrix.target }}-server &
       - name: Wait server ready
@@ -23,7 +25,7 @@ jobs:
       - name: Run benchmark
         run: ./benchmark.sh -a "--warmupIterations=1 --warmupTime=1 --measurementIterations=1 --measurementTime=1" ${{ matrix.target }}-client > output.txt
       - name: Kill jobs
-        run: jobs -p | xargs kill
+        run: jobs -p | xargs kill || true
       - name: Save output
         uses: actions/upload-artifact@v2
         with:
