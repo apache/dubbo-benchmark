@@ -25,11 +25,11 @@ jobs:
       - name: Wait server ready
         run: sleep 20
       - name: Run benchmark
-        run: ./benchmark.sh -a "--warmupIterations=1 --warmupTime=1 --measurementIterations=1 --measurementTime=1" ${{ matrix.target }}-client > output.txt
+        run: ./benchmark.sh -a "--warmupIterations=1 --warmupTime=1 --measurementIterations=1 --measurementTime=1" ${{ matrix.target }}-client > ${{ matrix.target }}-output.txt
       - name: Kill jobs
         run: jobs -p | xargs kill || true
       - name: Save output
         uses: actions/upload-artifact@v2
         with:
           name: ${{ matrix.target }}-output
-          path: output.txt
+          path: ${{ matrix.target }}-output.txt
