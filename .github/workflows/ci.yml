@@ -6,6 +6,8 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+
     strategy:
       matrix:
         target: [ "dubbo-avro","dubbo-fastjson","dubbo-grpc","dubbo-gson","dubbo-hessianlite","dubbo-kryo","dubbo-native-hessian","dubbo-pb","dubbo-protobuf-json","dubbo-protostuff" ]
