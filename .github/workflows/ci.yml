@@ -9,7 +9,7 @@ jobs:
 
     strategy:
       matrix:
-        target: [ "dubbo-avro","dubbo-fastjson" ]
+        target: [ "dubbo-avro","dubbo-fastjson","dubbo-grpc","dubbo-gson","dubbo-hessianlite","dubbo-kryo","dubbo-native-hessian","dubbo-pb","dubbo-protobuf-json","dubbo-protostuff" ]
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 8
@@ -26,7 +26,7 @@ jobs:
       - name: Run benchmark
         run: ./benchmark.sh -a "--warmupIterations=1 --warmupTime=1 --measurementIterations=1 --measurementTime=1" ${{ matrix.target }}-client > ${{ matrix.target }}-output.txt
       - name: Kill jobs
-        run: jobs -p | xargs kill || true
+        run: jobs -p | grep -o -E '\s\d+\s' | xargs kill || true
       - name: Save output
         uses: actions/upload-artifact@v2
         with:
