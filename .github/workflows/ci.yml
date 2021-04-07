@@ -4,13 +4,12 @@ on: [ push ]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
     strategy:
       matrix:
-        target: [ "dubbo-avro","dubbo-fastjson","dubbo-grpc","dubbo-gson","dubbo-hessianlite","dubbo-kryo","dubbo-native-hessian","dubbo-pb","dubbo-protobuf-json","dubbo-protostuff" ]
+        target: [ "dubbo-avro","dubbo-fastjson" ]
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 8
@@ -33,3 +32,14 @@ jobs:
         with:
           name: ${{ matrix.target }}-output
           path: ${{ matrix.target }}-output.txt
+
+  report:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v2
+      - with:
+          path: reports
+      - name: Display structure of downloaded files
+        run: ls -R
+        working-directory: reports
