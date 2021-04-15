@@ -50,6 +50,8 @@
         <module>dubbo-pb-client</module>
         <module>dubbo-grpc-server</module>
         <module>dubbo-grpc-client</module>
+        <module>dubbo-triple-server</module>
+        <module>dubbo-triple-client</module>
 
     </modules>
 
