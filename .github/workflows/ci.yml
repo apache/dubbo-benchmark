@@ -9,7 +9,7 @@ jobs:
 
     strategy:
       matrix:
-        target: [ "dubbo-avro","dubbo-fastjson","dubbo-gson","dubbo-hessianlite","dubbo-kryo","dubbo-native-hessian","dubbo-protostuff","dubbo-triple" ]
+        target: [ "dubbo-fastjson","dubbo-gson","dubbo-grpc","dubbo-hessianlite","dubbo-kryo","dubbo-native-hessian","dubbo-protobuf-json","dubbo-triple" ]
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 8
