@@ -36,3 +36,6 @@ hs_err_pid*
 
 # dubbo-serialization-native-hessian git repo
 dubbo-serialization-native-hessian/
+
+# .mvn
+!.mvn/wrapper/maven-wrapper.jar

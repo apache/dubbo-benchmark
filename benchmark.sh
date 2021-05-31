@@ -12,7 +12,7 @@ usage() {
 }
 
 build() {
-    mvn --projects benchmark-base,client-base,server-base,${PROJECT_DIR} clean package
+    ./mvnw --projects benchmark-base,client-base,server-base,${PROJECT_DIR} clean package
 }
 
 java_options() {
