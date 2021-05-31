@@ -1,9 +1,8 @@
 package org.apache.dubbo.benchmark;
 
-import com.google.protobuf.util.Timestamps;
 import org.apache.dubbo.benchmark.bean.PagePB;
 import org.apache.dubbo.benchmark.bean.UserServiceDubbo;
-import org.apache.dubbo.config.ProtocolConfig;
+import com.google.protobuf.util.Timestamps;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;

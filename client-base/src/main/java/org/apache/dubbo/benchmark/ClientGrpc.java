@@ -1,11 +1,10 @@
 package org.apache.dubbo.benchmark;
 
-import com.google.protobuf.util.Timestamps;
 import org.apache.dubbo.benchmark.bean.DubboUserServiceGrpc;
 import org.apache.dubbo.benchmark.bean.PagePB;
-import org.apache.dubbo.benchmark.bean.UserServiceDubbo;
 import org.apache.dubbo.benchmark.util.ClientCommonUtil;
 
+import com.google.protobuf.util.Timestamps;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
@@ -13,12 +12,8 @@ import org.openjdk.jmh.annotations.OutputTimeUnit;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.TearDown;
-import org.openjdk.jmh.results.format.ResultFormatType;
 import org.openjdk.jmh.runner.Runner;
-import org.openjdk.jmh.runner.options.ChainedOptionsBuilder;
 import org.openjdk.jmh.runner.options.Options;
-import org.openjdk.jmh.runner.options.OptionsBuilder;
-import org.openjdk.jmh.runner.options.TimeValue;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.IOException;
