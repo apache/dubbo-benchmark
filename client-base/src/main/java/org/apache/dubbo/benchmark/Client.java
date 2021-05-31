@@ -8,6 +8,8 @@ import org.apache.dubbo.benchmark.bean.Page;
 import org.apache.dubbo.benchmark.bean.User;
 import org.apache.dubbo.benchmark.rpc.AbstractClient;
 import org.apache.dubbo.benchmark.service.UserService;
+import org.apache.dubbo.benchmark.util.ClientCommonUtil;
+
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
@@ -15,6 +17,7 @@ import org.openjdk.jmh.annotations.OutputTimeUnit;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.TearDown;
+import org.openjdk.jmh.results.format.ResultFormatType;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.options.ChainedOptionsBuilder;
 import org.openjdk.jmh.runner.options.Options;
@@ -27,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 
 @State(Scope.Benchmark)
 public class Client extends AbstractClient {
-    private static final int CONCURRENCY = 32;
+    
 
     private final ClassPathXmlApplicationContext context;
     private final UserService userService;
@@ -81,44 +84,9 @@ public class Client extends AbstractClient {
     }
 
     public static void main(String[] args) throws Exception {
-        System.out.println(args);
-        org.apache.commons.cli.Options options = new org.apache.commons.cli.Options();
-
-        options.addOption(Option.builder().longOpt("warmupIterations").hasArg().build());
-        options.addOption(Option.builder().longOpt("warmupTime").hasArg().build());
-        options.addOption(Option.builder().longOpt("measurementIterations").hasArg().build());
-        options.addOption(Option.builder().longOpt("measurementTime").hasArg().build());
-
-        CommandLineParser parser = new DefaultParser();
-
-        CommandLine line = parser.parse(options, args);
-
-        int warmupIterations = Integer.valueOf(line.getOptionValue("warmupIterations", "3"));
-        int warmupTime = Integer.valueOf(line.getOptionValue("warmupTime", "10"));
-        int measurementIterations = Integer.valueOf(line.getOptionValue("measurementIterations", "3"));
-        int measurementTime = Integer.valueOf(line.getOptionValue("measurementTime", "10"));
-
-        Options opt;
-        ChainedOptionsBuilder optBuilder = new OptionsBuilder()
-                .include(Client.class.getSimpleName())
-                .warmupIterations(warmupIterations)
-                .warmupTime(TimeValue.seconds(warmupTime))
-                .measurementIterations(measurementIterations)
-                .measurementTime(TimeValue.seconds(measurementTime))
-                .threads(CONCURRENCY)
-                .forks(1);
-
-        opt = doOptions(optBuilder).build();
-
+        Options opt = ClientCommonUtil.doOptions(args).build();
         new Runner(opt).run();
-
     }
 
-    private static ChainedOptionsBuilder doOptions(ChainedOptionsBuilder optBuilder) {
-        String output = System.getProperty("benchmark.output");
-        if (output != null && !output.trim().isEmpty()) {
-            optBuilder.output(output);
-        }
-        return optBuilder;
-    }
+    
 }

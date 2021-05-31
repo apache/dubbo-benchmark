@@ -4,6 +4,8 @@ import com.google.protobuf.util.Timestamps;
 import org.apache.dubbo.benchmark.bean.DubboUserServiceGrpc;
 import org.apache.dubbo.benchmark.bean.PagePB;
 import org.apache.dubbo.benchmark.bean.UserServiceDubbo;
+import org.apache.dubbo.benchmark.util.ClientCommonUtil;
+
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
@@ -11,6 +13,7 @@ import org.openjdk.jmh.annotations.OutputTimeUnit;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.TearDown;
+import org.openjdk.jmh.results.format.ResultFormatType;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.options.ChainedOptionsBuilder;
 import org.openjdk.jmh.runner.options.Options;
@@ -97,25 +100,7 @@ public class ClientGrpc {
     }
 
     public static void main(String[] args) throws Exception {
-        Options opt;
-        ChainedOptionsBuilder optBuilder = new OptionsBuilder()
-                .include(ClientGrpc.class.getSimpleName())
-                .warmupIterations(3)
-                .warmupTime(TimeValue.seconds(10))
-                .measurementIterations(3)
-                .measurementTime(TimeValue.seconds(10))
-                .threads(CONCURRENCY)
-                .forks(1);
-
-        opt = doOptions(optBuilder).build();
+        Options opt = ClientCommonUtil.doOptions(args).build();
         new Runner(opt).run();
-    }
-
-    private static ChainedOptionsBuilder doOptions(ChainedOptionsBuilder optBuilder) {
-        String output = System.getProperty("benchmark.output");
-        if (output != null && !output.trim().isEmpty()) {
-            optBuilder.output(output);
-        }
-        return optBuilder;
     }
 }
