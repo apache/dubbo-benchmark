@@ -3,6 +3,7 @@
 usage() {
     echo "Usage: ${PROGRAM_NAME} command dirname"
     echo "command: [m|s|p|f]"
+    echo "         -v Dubbo version, eg: 2.7.11, 3.0.3.preview"
     echo "         -m [profiling|benchmark], specify benchmark mode"
     echo "         -s hostname, host name"
     echo "         -p port, port number"
@@ -13,7 +14,7 @@ usage() {
 }
 
 build() {
-    ./mvnw --projects benchmark-base,client-base,server-base,${PROJECT_DIR} clean package
+    ./mvnw --projects benchmark-base,client-base,server-base,${PROJECT_DIR} clean package -Ddubbo.version=${DUBBO_VERSION}
 }
 
 java_options() {
@@ -47,8 +48,11 @@ OUTPUT=""
 OPTIND=1
 OTHERARGS=""
 
-while getopts "m:s:p:f:n:a:" opt; do
+while getopts "v:m:s:p:f:n:a:" opt; do
     case "$opt" in
+        v)
+            DUBBO_VERSION=${OPTARG}
+            ;;
         m)
             MODE=${OPTARG}
             ;;
