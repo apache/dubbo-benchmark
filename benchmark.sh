@@ -82,8 +82,8 @@ if [ ! -d "${PROJECT_DIR}" ]; then
     exit 0
 fi
 
-#build
-#java_options
+build
+java_options
 run
 
 
