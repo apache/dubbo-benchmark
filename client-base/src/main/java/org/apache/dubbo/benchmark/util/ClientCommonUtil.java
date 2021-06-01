@@ -50,7 +50,7 @@ public class ClientCommonUtil {
                 .warmupTime(TimeValue.seconds(warmupTime))
                 .measurementIterations(measurementIterations)
                 .measurementTime(TimeValue.seconds(measurementTime))
-                .timeout(TimeValue.seconds(10))
+                .timeout(TimeValue.minutes(10))
                 .threads(concurrency)
                 .forks(1);
 

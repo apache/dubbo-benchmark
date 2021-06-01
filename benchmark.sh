@@ -6,7 +6,8 @@ usage() {
     echo "         -m [profiling|benchmark], specify benchmark mode"
     echo "         -s hostname, host name"
     echo "         -p port, port number"
-    echo "         -f output file path"
+    echo "         -f output folder path"
+    echo "         -n output file name"
     echo "         -a other args"
     echo "dirname: test module name"
 }
@@ -31,7 +32,7 @@ run() {
         JAR=`find ${PROJECT_DIR}/target/*.jar | head -n 1`
         echo
         echo "RUN ${PROJECT_DIR} IN ${MODE:-benchmark} MODE"
-        CMD="java ${JAVA_OPTIONS} -Dserver.host=${SERVER} -Dserver.port=${PORT} -Dbenchmark.output=${OUTPUT} -jar ${JAR} ${OTHERARGS}"
+        CMD="java ${JAVA_OPTIONS} -Dserver.host=${SERVER} -Dserver.port=${PORT} -Dbenchmark.output.dir=${OUTPUT} -Dbenchmark.output.name=${FILENAME} -jar ${JAR} ${OTHERARGS}"
         echo "command is: ${CMD}"
         echo
         ${CMD}
@@ -46,7 +47,7 @@ OUTPUT=""
 OPTIND=1
 OTHERARGS=""
 
-while getopts "m:s:p:f:a:" opt; do
+while getopts "m:s:p:f:n:a:" opt; do
     case "$opt" in
         m)
             MODE=${OPTARG}
@@ -59,6 +60,9 @@ while getopts "m:s:p:f:a:" opt; do
             ;;
         f)
             OUTPUT=${OPTARG}
+            ;;
+        n)
+            FILENAME=${OPTARG}
             ;;
         a)
             OTHERARGS=${OPTARG}
@@ -78,8 +82,8 @@ if [ ! -d "${PROJECT_DIR}" ]; then
     exit 0
 fi
 
-build
-java_options
+#build
+#java_options
 run
 
 
