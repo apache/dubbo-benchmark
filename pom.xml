@@ -12,7 +12,7 @@
     <properties>
         <java.source>1.8</java.source>
         <java.target>1.8</java.target>
-        <dubbo.version>2.7.9</dubbo.version>
+        <dubbo.version>2.7.11</dubbo.version>
         <netty.version>4.1.25.Final</netty.version>
         <kryo.version>4.0.2</kryo.version>
         <kryo-serializers.version>0.42</kryo-serializers.version>

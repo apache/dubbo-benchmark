@@ -3,7 +3,7 @@
 usage() {
     echo "Usage: ${PROGRAM_NAME} command dirname"
     echo "command: [m|s|p|f]"
-    echo "         -v Dubbo version, eg: 2.7.11, 3.0.3.preview"
+    echo "         -v Dubbo version, eg: 2.7.11, 3.0.0.preview"
     echo "         -m [profiling|benchmark], specify benchmark mode"
     echo "         -s hostname, host name"
     echo "         -p port, port number"
