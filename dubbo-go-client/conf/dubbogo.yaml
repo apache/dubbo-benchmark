@@ -1,0 +1,31 @@
+# dubbo client yaml configure file
+# ===================
+
+dubbo:
+  metrics:
+    enable: false # default is true
+    port: 9091 # default is 9090
+    namespace: dubbo_go_benchmark_consumer
+  protocols:
+    dubbo:
+      name: dubbo
+      params:
+        tcp-read-timeout: 30s
+        tcp-write-timeout: 30s
+        wait-timeout: 30s
+  registries:
+#    zk:
+#      protocol: zookeeper
+#      address: zookeeper-service.dubbogo-adaptivesvc.svc.cluster.local:2181
+  consumer:
+#    registry-ids:
+#      - zk
+    adaptive-service: false
+    references:
+      Provider:
+        url: dubbo://localhost:20001
+        protocol: dubbo
+        interface: org.apache.dubbo.Provider
+  logger:
+    zap-config:
+      level: error
