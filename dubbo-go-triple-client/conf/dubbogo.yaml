@@ -16,3 +16,4 @@ dubbo:
   logger:
     zap-config:
       level: error
+
