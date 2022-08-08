@@ -19,7 +19,6 @@ run() {
 PROGRAM_NAME=$0
 ARGS=""
 
-
 PROJECT_DIR=$1
 shift
 if [ ! -d "${PROJECT_DIR}" ]; then
@@ -29,11 +28,4 @@ fi
 
 ARGS=$@
 
-
 run
-
-
-
-
-
-
