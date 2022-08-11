@@ -1,0 +1,32 @@
+# dubbo server yaml configure file
+# ===================
+
+dubbo:
+  metrics:
+    enable: false # default is true
+    port: 9092 # default is 9090
+    namespace: dubbo_go_benchmark_provider # default is dubbo 作为数据上报 metrics_collector 的前缀
+#  registries:
+#    zk:
+#      protocol: zookeeper
+#      address: zookeeper-service.dubbogo-adaptivesvc.svc.cluster.local:2181
+  protocols:
+    my-protocol:
+      name: dubbo
+      port: 20001
+  provider:
+#    registry-ids:
+#      - zk
+    adaptive-service: false
+    # If you want to debug adaptive service, please uncomment the following codes.
+    adaptive-service-verbose: false
+    services:
+      Provider:
+        filter: offlineSimulator
+        protocol: my-protocol
+        interface: org.apache.dubbo.Provider
+  # If you want to debug adaptive service, please uncomment the following codes.
+  logger:
+    zap-config:
+      level: error
+

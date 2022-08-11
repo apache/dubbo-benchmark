@@ -18,6 +18,15 @@ Clone this project onto your desktop, then
 ./benchmark.sh dubbo-kryo-client
 ```
 
+* If you want run dubbo-go benchmark, use the script `benchmark-go.sh`, for example:
+```bash
+./benchmark-go.sh dubbo-go-triple-server
+./benchmark-go.sh dubbo-go-triple-client
+
+#You can use -h to see the configurable parameters, for example:
+./benchmark-go.sh dubbo-go-triple-client -h
+```
+
 ## How to Run Profiling
 
 * Start the target server in profiling mode, for example:

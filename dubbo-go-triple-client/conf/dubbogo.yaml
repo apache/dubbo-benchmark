@@ -1,0 +1,19 @@
+# dubbo client yaml configure file
+# ===================
+
+dubbo:
+  metrics:
+    enable: false # default is true
+    port: 9091 # default is 9090
+    namespace: dubbo_go_benchmark_consumer
+  consumer:
+    adaptive-service: false
+    references:
+      ProviderClientImpl:
+        url: tri://localhost:20001
+        protocol: tri
+        interface: org.apache.dubbo.Provider
+  logger:
+    zap-config:
+      level: error
+
