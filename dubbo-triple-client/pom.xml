@@ -12,7 +12,7 @@
     <artifactId>dubbo-triple-client</artifactId>
 
     <properties>
-        <dubbo.version>3.0.0.preview</dubbo.version>
+        <dubbo.version>3.1.0</dubbo.version>
     </properties>
 
     <dependencies>
@@ -45,7 +45,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.apache.dubbo.benchmark.Client</mainClass>
+                            <mainClass>org.apache.dubbo.benchmark.ClientPb</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
