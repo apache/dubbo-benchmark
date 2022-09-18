@@ -40,6 +40,8 @@
         <module>dubbo-avro-client</module>
         <module>dubbo-fastjson-client</module>
         <module>dubbo-fastjson-server</module>
+        <module>dubbo-fastjson2-client</module>
+        <module>dubbo-fastjson2-server</module>
         <module>dubbo-protostuff-server</module>
         <module>dubbo-protostuff-client</module>
         <module>dubbo-gson-server</module>
