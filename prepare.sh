@@ -3,7 +3,7 @@
 DUBBO_VERSION=$1
 
 echo "=====before replace====="
-cat /pom.xml
+cat ./pom.xml
 
 #get old version
 OLD_VERSION=`awk '/<dubbo.version>[^<]+<\/dubbo.version>/{gsub(/<dubbo.version>|<\/dubbo.version>/,"",$1);print $1}' ./pom.xml | uniq`
