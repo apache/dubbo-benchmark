@@ -101,6 +101,8 @@ public class Client extends AbstractClient {
         Options opt;
         ChainedOptionsBuilder optBuilder = new OptionsBuilder()
                 .include(Client.class.getSimpleName())
+                .exclude(ClientPb.class.getSimpleName())
+                .exclude(ClientGrpc.class.getSimpleName())
                 .warmupIterations(warmupIterations)
                 .warmupTime(TimeValue.seconds(warmupTime))
                 .measurementIterations(measurementIterations)
