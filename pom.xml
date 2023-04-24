@@ -54,6 +54,8 @@
         <module>dubbo-grpc-client</module>
         <module>dubbo-triple-server</module>
         <module>dubbo-triple-client</module>
+        <module>dubbo-metrics-client</module>
+        <module>dubbo-metrics-server</module>
 
     </modules>
 
