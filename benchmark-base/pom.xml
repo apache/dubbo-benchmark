@@ -14,7 +14,7 @@
     <properties>
         <dubbo.compiler.version>3.1.0</dubbo.compiler.version>
         <protoc.version>3.19.4</protoc.version>
-        <grpc.version>1.44.1</grpc.version>
+        <grpc.version>1.53.0</grpc.version>
     </properties>
 
     <dependencies>
