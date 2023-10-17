@@ -10,7 +10,7 @@
     <dubbo:service interface="org.apache.dubbo.benchmark.service.UserService" ref="userService" filter="-default"/>
     <bean id="userService" class="org.apache.dubbo.benchmark.service.UserServiceServerImpl"/>
 
-    <dubbo:metrics protocol="prometheus" enable-jvm-metrics="true">
+    <dubbo:metrics protocol="prometheus" enable-jvm="true">
         <dubbo:aggregation enabled="true"/>
     </dubbo:metrics>
 
