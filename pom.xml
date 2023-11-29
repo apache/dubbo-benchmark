@@ -19,7 +19,7 @@
         <fst.version>2.48-jdk-6</fst.version>
         <jmh.version>1.21</jmh.version>
         <slf4j.version>1.7.25</slf4j.version>
-        <logback.version>1.2.3</logback.version>
+        <logback.version>1.3.12</logback.version>
         <junit.version>4.12</junit.version>
         <cli.version>1.4</cli.version>
     </properties>
