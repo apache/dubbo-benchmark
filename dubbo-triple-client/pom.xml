@@ -11,10 +11,6 @@
 
     <artifactId>dubbo-triple-client</artifactId>
 
-    <properties>
-        <dubbo.version>3.1.0</dubbo.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.apache.dubbo</groupId>

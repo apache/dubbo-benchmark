@@ -35,7 +35,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.apache.dubbo.benchmark.Client</mainClass>
+                            <mainClass>org.apache.dubbo.benchmark.ClientSimple</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
