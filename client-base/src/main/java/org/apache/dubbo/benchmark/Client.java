@@ -74,6 +74,7 @@ public class Client extends AbstractClient {
                 .include(Client.class.getSimpleName())
                 .exclude(ClientPb.class.getSimpleName())
                 .exclude(ClientGrpc.class.getSimpleName())
+                .exclude(ClientNativeGrpc.class.getSimpleName())
                 .mode(Mode.Throughput)
                 .mode(Mode.AverageTime)
                 .mode(Mode.SampleTime)
