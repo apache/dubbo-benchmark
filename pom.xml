@@ -56,16 +56,12 @@
         <module>dubbo-triple-client</module>
         <module>dubbo-metrics-client</module>
         <module>dubbo-metrics-server</module>
+        <module>native-grpc-client</module>
+        <module>native-grpc-server</module>
 
     </modules>
 
     <dependencies>
-
-        <dependency>
-            <groupId>org.apache.dubbo</groupId>
-            <artifactId>dubbo</artifactId>
-            <version>${dubbo.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>io.netty</groupId>
