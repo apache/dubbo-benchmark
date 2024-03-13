@@ -1,43 +1,66 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.apache.dubbo.benchmark;
 
 import com.google.protobuf.util.Timestamps;
-import org.apache.dubbo.benchmark.bean.DubboUserServiceGrpc;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
 import org.apache.dubbo.benchmark.bean.PagePB;
+import org.apache.dubbo.benchmark.bean.UserServiceGrpc;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
-import org.openjdk.jmh.annotations.TearDown;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.options.ChainedOptionsBuilder;
 import org.openjdk.jmh.runner.options.Options;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @State(Scope.Benchmark)
-public class ClientGrpc {
+public class ClientNativeGrpc {
+
     private static final int CONCURRENCY = 32;
 
-    private final ClassPathXmlApplicationContext context;
-    private final DubboUserServiceGrpc.IUserService userService;
-    private final AtomicInteger counter = new AtomicInteger(0);
+    private final UserServiceGrpc.UserServiceBlockingStub userService;
 
-    public ClientGrpc() {
-        context = new ClassPathXmlApplicationContext("consumer.xml");
-        context.start();
-        userService = (DubboUserServiceGrpc.IUserService) context.getBean("userService");
-    }
+    private final AtomicInteger counter = new AtomicInteger();
 
+    public ClientNativeGrpc() {
+        try (InputStream stream = ClientNativeGrpc.class.getClassLoader().getResourceAsStream("benchmark.properties")) {
+            InputStream propertiesStream = Objects.requireNonNull(stream, "benchmark.properties not found");
+            Properties properties = new Properties();
+            properties.load(propertiesStream);
+            ManagedChannel channel = ManagedChannelBuilder.forAddress(properties.getProperty("server.host"),
+                            Integer.parseInt(properties.getProperty("server.port")))
+                    .usePlaintext()
+                    .build();
+            this.userService = UserServiceGrpc.newBlockingStub(channel);
+        } catch (Throwable throwable) {
+            throw new IllegalStateException(throwable);
+        }
 
-    @TearDown
-    public void close() throws IOException {
-        context.close();
     }
 
     @Benchmark
@@ -88,14 +111,13 @@ public class ClientGrpc {
         String format = arguments.getResultFormat();
         ChainedOptionsBuilder optBuilder = ClientHelper.newBaseChainedOptionsBuilder(arguments)
                 .result(System.currentTimeMillis() + "." + format)
-                .include(ClientGrpc.class.getSimpleName())
+                .include(ClientNativeGrpc.class.getSimpleName())
                 .mode(Mode.Throughput)
                 .mode(Mode.AverageTime)
                 .mode(Mode.SampleTime)
                 .timeUnit(TimeUnit.MILLISECONDS)
                 .threads(CONCURRENCY)
                 .forks(1);
-
         Options opt = optBuilder.build();
         new Runner(opt).run();
     }

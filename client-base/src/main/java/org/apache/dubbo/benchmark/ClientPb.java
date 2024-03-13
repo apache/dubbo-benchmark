@@ -3,19 +3,14 @@ package org.apache.dubbo.benchmark;
 import com.google.protobuf.util.Timestamps;
 import org.apache.dubbo.benchmark.bean.PagePB;
 import org.apache.dubbo.benchmark.bean.UserServiceDubbo;
-import org.apache.dubbo.config.ProtocolConfig;
 import org.openjdk.jmh.annotations.Benchmark;
-import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
-import org.openjdk.jmh.annotations.OutputTimeUnit;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.TearDown;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.options.ChainedOptionsBuilder;
 import org.openjdk.jmh.runner.options.Options;
-import org.openjdk.jmh.runner.options.OptionsBuilder;
-import org.openjdk.jmh.runner.options.TimeValue;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.IOException;
@@ -46,8 +41,6 @@ public class ClientPb {
     }
 
     @Benchmark
-    @BenchmarkMode({Mode.Throughput, Mode.AverageTime, Mode.SampleTime})
-    @OutputTimeUnit(TimeUnit.MILLISECONDS)
     public boolean existUser() throws Exception {
         final int count = counter.getAndIncrement();
         return userService.existUser(PagePB.Request.newBuilder().setEmail(String.valueOf(count)).build())
@@ -55,8 +48,6 @@ public class ClientPb {
     }
 
     @Benchmark
-    @BenchmarkMode({Mode.Throughput, Mode.AverageTime, Mode.SampleTime})
-    @OutputTimeUnit(TimeUnit.MILLISECONDS)
     public boolean createUser() throws Exception {
         final int count = counter.getAndIncrement();
 
@@ -81,42 +72,33 @@ public class ClientPb {
     }
 
     @Benchmark
-    @BenchmarkMode({Mode.Throughput, Mode.AverageTime, Mode.SampleTime})
-    @OutputTimeUnit(TimeUnit.MILLISECONDS)
     public PagePB.User getUser() throws Exception {
         final int count = counter.getAndIncrement();
         return userService.getUser(PagePB.Request.newBuilder().setId(count).build()).getUser();
     }
 
     @Benchmark
-    @BenchmarkMode({Mode.Throughput, Mode.AverageTime, Mode.SampleTime})
-    @OutputTimeUnit(TimeUnit.MILLISECONDS)
     public PagePB.Page listUser() throws Exception {
         final int count = counter.getAndIncrement();
         return userService.listUser(PagePB.Request.newBuilder().setPage(count).build()).getPage();
     }
 
     public static void main(String[] args) throws Exception {
-        Options opt;
-        ChainedOptionsBuilder optBuilder = new OptionsBuilder()
+        System.out.println(Arrays.toString(args));
+        ClientHelper.Arguments arguments = ClientHelper.parseArguments(args);
+        String format = arguments.getResultFormat();
+        ChainedOptionsBuilder optBuilder = ClientHelper.newBaseChainedOptionsBuilder(arguments)
+                .result(System.currentTimeMillis() + "." + format)
                 .include(ClientPb.class.getSimpleName())
-                .warmupIterations(3)
-                .warmupTime(TimeValue.seconds(10))
-                .measurementIterations(3)
-                .measurementTime(TimeValue.seconds(10))
+                .mode(Mode.Throughput)
+                .mode(Mode.AverageTime)
+                .mode(Mode.SampleTime)
+                .timeUnit(TimeUnit.MILLISECONDS)
                 .threads(CONCURRENCY)
                 .forks(1);
 
-        opt = doOptions(optBuilder).build();
+        Options opt = optBuilder.build();
 
         new Runner(opt).run();
-    }
-
-    private static ChainedOptionsBuilder doOptions(ChainedOptionsBuilder optBuilder) {
-        String output = System.getProperty("benchmark.output");
-        if (output != null && !output.trim().isEmpty()) {
-            optBuilder.output(output);
-        }
-        return optBuilder;
     }
 }
