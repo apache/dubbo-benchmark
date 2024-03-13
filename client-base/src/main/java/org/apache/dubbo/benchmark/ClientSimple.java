@@ -19,13 +19,13 @@ import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 @State(Scope.Benchmark)
-public class Client extends AbstractClient {
+public class ClientSimple extends AbstractClient {
     private static final int CONCURRENCY = 32;
 
     private final ClassPathXmlApplicationContext context;
     private final UserService userService;
 
-    public Client() {
+    public ClientSimple() {
         context = new ClassPathXmlApplicationContext("consumer.xml");
         context.start();
         userService = (UserService) context.getBean("userService");
@@ -71,7 +71,7 @@ public class Client extends AbstractClient {
         String format = arguments.getResultFormat();
         ChainedOptionsBuilder optBuilder = ClientHelper.newBaseChainedOptionsBuilder(arguments)
                 .result(System.currentTimeMillis() + "." + format)
-                .include(Client.class.getSimpleName())
+                .include(ClientSimple.class.getSimpleName())
                 .exclude(ClientPb.class.getSimpleName())
                 .exclude(ClientGrpc.class.getSimpleName())
                 .exclude(ClientNativeGrpc.class.getSimpleName())

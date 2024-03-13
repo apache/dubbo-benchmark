@@ -114,7 +114,7 @@ public class ClientNativeGrpc {
                 .include(ClientNativeGrpc.class.getSimpleName())
                 .exclude(ClientPb.class.getSimpleName())
                 .exclude(ClientGrpc.class.getSimpleName())
-                .exclude(Client.class.getSimpleName())
+                .exclude(ClientSimple.class.getSimpleName())
                 .mode(Mode.Throughput)
                 .mode(Mode.AverageTime)
                 .mode(Mode.SampleTime)

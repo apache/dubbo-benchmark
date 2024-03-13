@@ -89,7 +89,6 @@ public class ClientGrpc {
         ChainedOptionsBuilder optBuilder = ClientHelper.newBaseChainedOptionsBuilder(arguments)
                 .result(System.currentTimeMillis() + "." + format)
                 .include(ClientGrpc.class.getSimpleName())
-                .exclude(Client.class.getSimpleName())
                 .exclude(ClientNativeGrpc.class.getSimpleName())
                 .exclude(ClientPb.class.getSimpleName())
                 .mode(Mode.Throughput)
