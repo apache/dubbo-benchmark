@@ -21,10 +21,11 @@
             <groupId>com.caucho</groupId>
             <artifactId>hessian</artifactId>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.apache.dubbo</groupId>-->
-<!--            <artifactId>dubbo-serialization-native-hession</artifactId>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.apache.dubbo.extensions</groupId>
+            <artifactId>dubbo-serialization-native-hession</artifactId>
+            <version>${dubbo-serialization-extension.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

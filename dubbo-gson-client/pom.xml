@@ -17,6 +17,11 @@
             <artifactId>client-base</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.dubbo.extensions</groupId>
+            <artifactId>dubbo-serialization-gson</artifactId>
+            <version>${dubbo-serialization-extension.version}</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

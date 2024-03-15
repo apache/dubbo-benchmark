@@ -9,4 +9,5 @@
     <dubbo:registry address="N/A"/>
     <dubbo:service interface="org.apache.dubbo.benchmark.bean.UserServiceDubbo$IUserService" ref="userService" filter="-default" serialization="protobuf"/>
     <bean id="userService" class="org.apache.dubbo.benchmark.service.PBUserServiceImpl"/>
+    <bean id="dubboPbClientInitializer" class="org.apache.dubbo.benchmark.DubboPbServerInitializer"/>
 </beans>

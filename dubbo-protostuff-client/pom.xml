@@ -32,6 +32,11 @@
             <artifactId>objenesis</artifactId>
             <version>2.5</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.dubbo.extensions</groupId>
+            <artifactId>dubbo-serialization-protostuff</artifactId>
+            <version>${dubbo-serialization-extension.version}</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
