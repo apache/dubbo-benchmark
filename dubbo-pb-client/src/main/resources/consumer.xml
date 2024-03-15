@@ -7,6 +7,9 @@
     <dubbo:application name="dubbo-pb-client"/>
     <dubbo:reference id="userService" check="false"
                      interface="org.apache.dubbo.benchmark.bean.UserServiceDubbo$IUserService"
-                     url="dubbo://${server.host}:${server.port}"/>
+                     url="dubbo://${server.host}:${server.port}">
+        <dubbo:parameter key="prefer.serialization" value="protobuf"/>
+    </dubbo:reference>
     <dubbo:consumer client="netty4" filter="-default"/>
+    <bean id="dubboPbClientInitializer" class="org.apache.dubbo.benchmark.DubboPbClientInitializer"/>
 </beans>
