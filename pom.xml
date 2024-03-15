@@ -15,10 +15,10 @@
         <dubbo.version>3.2.11</dubbo.version>
         <dubbo-serialization-extension.version>1.0.1</dubbo-serialization-extension.version>
         <netty.version>4.1.107.Final</netty.version>
-        <kryo.version>4.0.2</kryo.version>
+        <kryo.version>5.3.0</kryo.version>
         <avro.version>1.11.3</avro.version>
         <protostuff.version>1.8.0</protostuff.version>
-        <kryo-serializers.version>0.42</kryo-serializers.version>
+        <kryo-serializers.version>0.45</kryo-serializers.version>
         <fst.version>2.48-jdk-6</fst.version>
         <jmh.version>1.21</jmh.version>
         <slf4j.version>1.7.25</slf4j.version>

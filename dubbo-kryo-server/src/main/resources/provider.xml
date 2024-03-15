@@ -10,4 +10,5 @@
     <dubbo:registry address="N/A"/>
     <dubbo:service interface="org.apache.dubbo.benchmark.service.UserService" ref="userService" filter="-default"/>
     <bean id="userService" class="org.apache.dubbo.benchmark.service.UserServiceServerImpl"/>
+    <bean id="kryoClassInitializer" class="org.apache.dubbo.benchmark.KryoClassInitializer"/>
 </beans>

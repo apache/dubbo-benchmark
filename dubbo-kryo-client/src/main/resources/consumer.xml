@@ -7,6 +7,9 @@
     <dubbo:application name="dubbo-kyro-client"/>
     <dubbo:reference id="userService" check="false"
                      interface="org.apache.dubbo.benchmark.service.UserService"
-                     url="dubbo://${server.host}:${server.port}?optimizer=org.apache.dubbo.benchmark.serialize.SerializationOptimizerImpl&amp;serialization=kryo"/>
+                     url="dubbo://${server.host}:${server.port}?optimizer=org.apache.dubbo.benchmark.serialize.SerializationOptimizerImpl&amp;serialization=kryo">
+        <dubbo:parameter key="prefer.serialization" value="kryo"/>
+    </dubbo:reference>
     <dubbo:consumer client="netty4" filter="-default"/>
+    <bean id="kryoClassInitializer" class="org.apache.dubbo.benchmark.KryoClassInitializer"/>
 </beans>
