@@ -31,8 +31,5 @@ hs_err_pid*
 # preflight record result
 *.jfr
 
-# jmh output
-*.json
-
 # dubbo-serialization-native-hessian git repo
 dubbo-serialization-native-hessian/
