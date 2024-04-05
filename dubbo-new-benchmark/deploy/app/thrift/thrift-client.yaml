@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: thrift-client
+  namespace: dubbo-benchmark
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: thrift-client
+  template:
+    metadata:
+      labels:
+        app: thrift-client
+    spec:
+      containers:
+        - name: thrift-client
+          image: 15841721425/thrift-client:1.1  # 更换为你的镜像路径
+          imagePullPolicy: Always
+          env:
+            - name: SERVER_HOST
+              value: thrift-server-service.dubbo-benchmark.svc.cluster.local  # 假设客户端需要连接到Thrift服务器
+            - name: SERVER_PORT
+              value: "40001"
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "1024Mi"
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: thrift-client-service
+  namespace: dubbo-benchmark
+spec:
+  selector:
+    app: thrift-client
+  ports:
+    - protocol: TCP
+      port: 60002
+      targetPort: 60002
+  type: ClusterIP

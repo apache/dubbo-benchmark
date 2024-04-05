@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grpc-server
+  namespace: dubbo-benchmark
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grpc-server
+  template:
+    metadata:
+      labels:
+        app: grpc-server
+    spec:
+      containers:
+        - name: grpc-server
+          image: 15841721425/grpc-server:1.4 # 更换为你的镜像路径
+          imagePullPolicy: Always
+          ports:
+            - name: grpc-port
+              containerPort: 50053
+            - name: health-port
+              containerPort: 50055  # 设置为gRPC服务器的健康检查端口
+          env:
+            - name: DB_HOST
+              value: postgres-service.dubbo-benchmark.svc.cluster.local
+            - name: PROM_URL
+              value: kube-prometheus-stack-prometheus.monitoring.svc.cluster.local
+          resources:
+            limits:
+              cpu: "4000m"
+              memory: "8192Mi"
+            requests:
+              cpu: "500m"
+              memory: "512Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grpc-server-service
+  namespace: dubbo-benchmark
+spec:
+  selector:
+    app: grpc-server
+  ports:
+    - protocol: TCP
+      port: 50053
+      targetPort: 50053
+  type: ClusterIP
