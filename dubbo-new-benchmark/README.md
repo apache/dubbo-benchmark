@@ -25,9 +25,9 @@ avg ((sum by (pod) (irate(container_cpu_usage_seconds_total{container!="",contai
 
 ### 1.目录结构
 
-![image-20240405173640734](C:\Users\wys\AppData\Roaming\Typora\typora-user-images\image-20240405173640734.png)
+![image-20240405173640734](./assets/目录结构.png)
 
-![image-20240405174228197](C:\Users\wys\AppData\Roaming\Typora\typora-user-images\image-20240405174228197.png)
+![image-20240405174228197](./assets/目录结构2.png)
 
 
 
@@ -46,17 +46,17 @@ avg ((sum by (pod) (irate(container_cpu_usage_seconds_total{container!="",contai
 
 ### 2.模块打包上传
 
-<img src="C:\Users\wys\AppData\Roaming\Typora\typora-user-images\image-20240405180318200.png" alt="image-20240405180318200" style="zoom: 67%;" />
+<img src="./assets/模块打包.png" alt="image-20240405180318200" style="zoom: 67%;" />
 
 1. 先对dubbo-base-benchmark进行打包
 
 2. 对各个模块可以选择版本号进行打包，对client和server进行分别打包
 
-   ![image-20240405180512533](C:\Users\wys\AppData\Roaming\Typora\typora-user-images\image-20240405180512533.png)
+   ![子模块打包.png](./assets/子模块打包.png)
 
 3. 对特定版本进行部署，需要指定版本号
 
-![image-20240405181143377](C:\Users\wys\AppData\Roaming\Typora\typora-user-images\image-20240405181143377.png)
+![部署指定版本.png](./assets/部署指定版本.png)
 
 ### 3.自动化部署
 
@@ -64,14 +64,14 @@ avg ((sum by (pod) (irate(container_cpu_usage_seconds_total{container!="",contai
 
 2. 创建monitor的namespace，执行install.sh
 
-   ![image-20240405175410906](C:\Users\wys\AppData\Roaming\Typora\typora-user-images\image-20240405175410906.png)
+   ![安装monitor.png](./assets/安装monitor.png)
 
 3. 对各个app里面的内容，先部署server，然后在部署定时任务。
 
-   ![image-20240405175529359](C:\Users\wys\AppData\Roaming\Typora\typora-user-images\image-20240405175529359.png)
+   ![image-20240405175529359](./assets/部署定时任务.png)
 
 4. 将部署的grafana进行本地端口映射
 
-   ![95c1d57b117a050f83ef77c8be4e524](D:\微信文件\WeChat Files\wxid_ezbercj1ubpj22\FileStorage\Temp\95c1d57b117a050f83ef77c8be4e524.jpg)
+   ![95c1d57b117a050f83ef77c8be4e524](./assets/监控面板.png)
 
    
