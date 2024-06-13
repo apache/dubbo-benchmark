@@ -1,0 +1,47 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+dubbo:
+  application:
+    name: dubbo-triple-client
+    qos-port: 33333
+  registry:
+    address: nacos://${NACOS_ADDRESS:121.250.209.74}:8848
+
+benchmark:
+  test-threads: 32
+  warmup-iterations: 1
+  warmup-time-seconds: 2
+  measurement-iterations: 2
+  measurement-time: 5
+  protocol: triple
+  rpc-version: 3.3.0-beta.1
+  prometheus-url: http://${PROM_URL:localhost}:9090/api/v1/query_range
+
+spring:
+  application:
+    name: ${dubbo.application.name}
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${DB_HOST:121.250.209.74}:5432/benchmark
+    username: admin
+    password: cong0917
+
+
+mybatis-plus:
+  global-config:
+    db-config:
+      update-strategy: ignored # null也会更新

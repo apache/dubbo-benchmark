@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dubbo-dubbo-server
+  namespace: dubbo-benchmark
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dubbo-dubbo-server
+  template:
+    metadata:
+      labels:
+        app: dubbo-dubbo-server
+    spec:
+      containers:
+        - name: dubbo-dubbo-server
+          image: 15841721425/dubbo-dubbo-server:1.5
+          imagePullPolicy: Always
+          ports:
+            - name: dubbo-port
+              containerPort: 20880
+            - name: qos-port
+              containerPort: 22222
+          env:
+            - name: NACOS_ADDRESS
+              value: nacos.dubbo-benchmark.svc.cluster.local
+          livenessProbe:
+            httpGet:
+              path: /live
+              port: 22222
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 22222
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          startupProbe:
+            httpGet:
+              path: /startup
+              port: 22222
+            failureThreshold: 30
+            periodSeconds: 10
+          resources:
+            limits:
+              cpu: "4000m"
+              memory: "8192Mi"
+            requests:
+              cpu: "500m"
+              memory: "512Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dubbo-dubbo-server-service
+  namespace: dubbo-benchmark
+spec:
+  selector:
+    app: dubbo-dubbo-server
+  ports:
+    - protocol: TCP
+      port: 20880
+      targetPort: 20880
+  type: ClusterIP

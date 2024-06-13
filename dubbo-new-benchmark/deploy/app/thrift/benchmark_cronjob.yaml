@@ -1,0 +1,37 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: thrift-client
+  namespace: dubbo-benchmark
+spec:
+  schedule: "*/10 * * * *"
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: 60
+      template:
+        metadata:
+          labels:
+            app: thrift-client
+        spec:
+          containers:
+            - name: thrift-client
+              image: 15841721425/thrift-client:1.3
+              imagePullPolicy: Always
+              ports:
+                - name: thrift-port
+                  containerPort: 60002
+                - name: health-port
+                  containerPort: 60003  # 更改为gRPC客户端的健康检查端口
+              env:
+                - name: SERVER_HOST
+                  value: thrift-server-service.dubbo-benchmark.svc.cluster.local  # 假设客户端需要连接到Thrift服务器
+                - name: SERVER_PORT
+                  value: "40001"
+              resources:
+                limits:
+                  cpu: "4000m"
+                  memory: "8192Mi"
+                requests:
+                  cpu: "500m"
+                  memory: "1024Mi"
+          restartPolicy: Never

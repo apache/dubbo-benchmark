@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dubbo-dubbo-client
+  namespace: dubbo-benchmark
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dubbo-dubbo-client
+  template:
+    metadata:
+      labels:
+        app: dubbo-dubbo-client
+    spec:
+      containers:
+        - name: dubbo-dubbo-client
+          image: 15841721425/dubbo-dubbo-client:1.4
+          imagePullPolicy: Always
+          ports:
+            - name: dubbo-port
+              containerPort: 20880
+            - name: qos-port
+              containerPort: 22222
+          env:
+            - name: NACOS_ADDRESS
+              value: nacos.dubbo-benchmark.svc.cluster.local
+            - name: DB_HOST
+              value: postgres-service.dubbo-benchmark.svc.cluster.local
+            - name: PROM_URL
+              value: kube-prometheus-stack-prometheus.monitoring.svc.cluster.local
+          livenessProbe:
+            httpGet:
+              path: /live
+              port: 22222
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 22222
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          startupProbe:
+            httpGet:
+              path: /startup
+              port: 22222
+            failureThreshold: 30
+            periodSeconds: 10
+          resources:
+            limits:
+              cpu: "4000m"
+              memory: "8192Mi"
+            requests:
+              cpu: "500m"
+              memory: "1024Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dubbo-dubbo-client-service
+  namespace: dubbo-benchmark
+spec:
+  selector:
+    app: dubbo-dubbo-client
+  ports:
+    - protocol: TCP
+      port: 20880
+      targetPort: 20880
+  type: ClusterIP

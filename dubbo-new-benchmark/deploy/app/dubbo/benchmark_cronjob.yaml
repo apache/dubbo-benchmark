@@ -1,0 +1,39 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: dubbo-dubbo-client
+  namespace: dubbo-benchmark
+spec:
+  schedule: "*/10 * * * *"
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: 60
+      template:
+        metadata:
+          labels:
+            app: dubbo-dubbo-client
+        spec:
+          containers:
+            - name: dubbo-dubbo-client
+              image: 15841721425/dubbo-dubbo-client:1.5
+              imagePullPolicy: Always
+              ports:
+                - name: dubbo-port
+                  containerPort: 20880
+                - name: qos-port
+                  containerPort: 22222
+              env:
+                - name: NACOS_ADDRESS
+                  value: nacos.dubbo-benchmark.svc.cluster.local
+                - name: DB_HOST
+                  value: postgres-service.dubbo-benchmark.svc.cluster.local
+                - name: PROM_URL
+                  value: kube-prometheus-stack-prometheus.monitoring.svc.cluster.local
+              resources:
+                limits:
+                  cpu: "4000m"
+                  memory: "8192Mi"
+                requests:
+                  cpu: "500m"
+                  memory: "1024Mi"
+          restartPolicy: Never
