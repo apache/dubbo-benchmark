@@ -8,16 +8,16 @@ data:
     use benchmark;
     create table benchmark_score
     (
-    id             bigint auto_increment primary key,
-    name           varchar(32) not null,
-    mode           varchar(16) not null,
-    score          double      not null,
-    p99            double      not null,
-    p95            double      not null,
-    p90            double      not null,
-    method         varchar(64) not null,
-    benchmark_time datetime    not null,
-    create_time    datetime    not null
+        id             bigint auto_increment primary key,
+        name           varchar(32) not null,
+        mode           varchar(16) not null,
+        score          double      not null,
+        p99            double      not null,
+        p95            double      not null,
+        p90            double      not null,
+        method         varchar(64) not null,
+        benchmark_time datetime    not null,
+        create_time    datetime    not null
     );
     create index idx on benchmark_score (benchmark_time, method, name, mode);
 ---
@@ -56,7 +56,7 @@ spec:
               mountPath: /var/lib/mysql
               subPath: mysql
             - name: init-script
-              mountPath: /home/dev/schema.sql
+              mountPath: /docker-entrypoint-initdb.d/schema.sql
               subPath: schema.sql
 
       volumes:
@@ -118,14 +118,14 @@ spec:
           ports:
             - containerPort: 3000
           volumeMounts:
-            - mountPath: /var/lib/grafana/
-              name: grafana-pvc
+            #            - mountPath: /var/lib/grafana/
+            #              name: grafana-pvc
             - mountPath: /etc/grafana/
               name: grafana-config
       volumes:
-        - name: grafana-pvc
-          persistentVolumeClaim:
-            claimName: benchmark
+        #        - name: grafana-pvc
+        #          persistentVolumeClaim:
+        #            claimName: benchmark
         - name: grafana-config
           configMap:
             name: grafana

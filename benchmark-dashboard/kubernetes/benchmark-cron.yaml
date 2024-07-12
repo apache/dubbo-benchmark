@@ -4,6 +4,7 @@ metadata:
   name: cron-dubbo-fastjson2-32-benchmark-job
 spec:
   schedule: "20 * * * *"
+  concurrencyPolicy: Forbid
   jobTemplate:
     spec:
       ttlSecondsAfterFinished: 300
@@ -63,8 +64,6 @@ spec:
               secret:
                 secretName: mysql-secret
           restartPolicy: Never
-
-
 ---
 apiVersion: batch/v1
 kind: CronJob
@@ -72,6 +71,7 @@ metadata:
   name: cron-dubbo-hessianlite-32-benchmark-job
 spec:
   schedule: "20 * * * *"
+  concurrencyPolicy: Forbid
   jobTemplate:
     spec:
       ttlSecondsAfterFinished: 300
@@ -140,6 +140,7 @@ metadata:
   name: cron-grpc-benchmark-job
 spec:
   schedule: "20 * * * *"
+  concurrencyPolicy: Forbid
   jobTemplate:
     spec:
       ttlSecondsAfterFinished: 300
@@ -209,6 +210,7 @@ metadata:
   name: cron-spring-cloud-benchmark-job
 spec:
   schedule: "40 * * * *"
+  concurrencyPolicy: Forbid
   jobTemplate:
     spec:
       ttlSecondsAfterFinished: 300
@@ -277,6 +279,7 @@ metadata:
   name: cron-triple-32-benchmark-job
 spec:
   schedule: "40 * * * *"
+  concurrencyPolicy: Forbid
   jobTemplate:
     spec:
       ttlSecondsAfterFinished: 300
@@ -346,6 +349,7 @@ metadata:
   name: cron-dubbo-kryo-32-benchmark-job
 spec:
   schedule: "40 * * * *"
+  concurrencyPolicy: Forbid
   jobTemplate:
     spec:
       ttlSecondsAfterFinished: 300
@@ -415,6 +419,7 @@ metadata:
   name: cron-dubbo-pb-32-benchmark-job
 spec:
   schedule: "0 * * * *"
+  concurrencyPolicy: Forbid
   jobTemplate:
     spec:
       ttlSecondsAfterFinished: 300
