@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: springcloud-client
+  namespace: dubbo-benchmark
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: springcloud-client
+  template:
+    metadata:
+      labels:
+        app: springcloud-client
+    spec:
+      containers:
+        - name: springcloud-client
+          image: 15841721425/springcloud-client:1.3  # 替换为实际的镜像路径
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 60081
+            - name: health-port
+              containerPort: 60083
+          env:
+            - name: NACOS_ADDRESS
+              value: nacos.dubbo-benchmark.svc.cluster.local
+            - name: SERVER_URL
+              value: springcloud-server-service.dubbo-benchmark.svc.cluster.local:60080  # 服务提供者的应用名称
+            - name: PROM_URL
+              value: kube-prometheus-stack-prometheus.monitoring.svc.cluster.local
+          resources:
+            limits:
+              cpu: "1"
+              memory: "2048Mi"
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: springcloud-client-service
+  namespace: dubbo-benchmark
+spec:
+  selector:
+    app: springcloud-client
+  ports:
+    - protocol: TCP
+      port: 60081
+      targetPort: 60081
+  type: ClusterIP

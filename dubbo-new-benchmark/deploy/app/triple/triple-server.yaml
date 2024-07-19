@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dubbo-triple-server
+  namespace: dubbo-benchmark
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dubbo-triple-server
+  template:
+    metadata:
+      labels:
+        app: dubbo-triple-server
+    spec:
+      containers:
+        - name: dubbo-triple-server
+          image: 15841721425/dubbo-triple-server:1.1
+          imagePullPolicy: Always
+          ports:
+            - name: dubbo-port
+              containerPort: 50052
+            - name: qos-port
+              containerPort: 22222
+          env:
+            - name: NACOS_ADDRESS
+              value: nacos.dubbo-benchmark.svc.cluster.local
+          livenessProbe:
+            httpGet:
+              path: /live
+              port: 22222
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 22222
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          startupProbe:
+            httpGet:
+              path: /startup
+              port: 22222
+            failureThreshold: 30
+            periodSeconds: 10
+          resources:
+            limits:
+              cpu: "4000m"
+              memory: "8192Mi"
+            requests:
+              cpu: "500m"
+              memory: "512Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dubbo-triple-server-service
+  namespace: dubbo-benchmark
+spec:
+  selector:
+    app: dubbo-triple-server
+  ports:
+    - protocol: TCP
+      port: 50052
+      targetPort: 50052
+  type: ClusterIP

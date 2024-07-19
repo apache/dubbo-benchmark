@@ -1,0 +1,41 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: grpc-client
+  namespace: dubbo-benchmark
+spec:
+  schedule: "*/10 * * * *"
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: 60
+      template:
+        metadata:
+          labels:
+            app: grpc-client
+        spec:
+          containers:
+            - name: grpc-client
+              image: 15841721425/grpc-client:1.4
+              imagePullPolicy: Always
+              ports:
+                - name: grpc-port
+                  containerPort: 50051
+                - name: health-port
+                  containerPort: 50054  # 更改为gRPC客户端的健康检查端口
+              env:
+                - name: NACOS_ADDRESS
+                  value: nacos.dubbo-benchmark.svc.cluster.local
+                - name: DB_HOST
+                  value: postgres-service.dubbo-benchmark.svc.cluster.local
+                - name: PROM_URL
+                  value: kube-prometheus-stack-prometheus.monitoring.svc.cluster.local
+                - name: SERVER_URL
+                  value: grpc-server-service.dubbo-benchmark.svc.cluster.local:50053
+              resources:
+                limits:
+                  cpu: "4000m"
+                  memory: "8192Mi"
+                requests:
+                  cpu: "500m"
+                  memory: "1024Mi"
+          restartPolicy: Never

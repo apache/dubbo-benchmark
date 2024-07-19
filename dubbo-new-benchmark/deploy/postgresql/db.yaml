@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  namespace: dubbo-benchmark
+spec:
+  selector:
+    matchLabels:
+      app: postgres
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:latest
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              value: "admin"
+            - name: POSTGRES_PASSWORD
+              value: "cong0917"
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1280Mi
+            limits:
+              cpu: 800m
+              memory: 1280Mi
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data
+              subPath: postgres
+      volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: postgres-pvc-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service
+  namespace: dubbo-benchmark
+  labels:
+    app: postgresql
+spec:
+  ports:
+    - port: 5432
+  selector:
+    app: postgres
+  type: ClusterIP
