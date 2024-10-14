@@ -1,0 +1,97 @@
+# IntelliJ IDEA
+.idea/
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Gradle
+.gradle/
+
+# Maven
+target/
+*.iml
+*.ipr
+*.iws
+*.log
+
+# Logs
+log/
+logs/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Compiled class file
+*.class
+
+# JAR files
+*.jar
+
+# War files
+*.war
+
+# Eclipse metadata
+.metadata/
+
+# VS Code
+.vscode/
+
+# Spring Boot
+!.mvn/wrapper/maven-wrapper.jar
+
+# Generated files
+gen/
+
+# Local configuration file (e.g., application-local.properties)
+application-*.properties
+
+# Spring Boot DevTools
+.restart
+.springBeans
+
+# Bytecode
+target/classes/
+
+# Caches
+.caches/
+
+# Test Results
+test-output/
+
+# SonarQube
+.sonar/
+
+# Package Files
+*.ear
+
+./deploy/images
+
+*.tar
+
+
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### IntelliJ IDEA ###
+.idea/modules.xml
+.idea/jarRepositories.xml
+.idea/compiler.xml
+.idea/libraries/
+
+### Eclipse ###
+.apt_generated
+.factorypath
+.settings
+.sts4-cache
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+!**/src/main/**/build/
+!**/src/test/**/build/

@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_outer_classname = "HelloWorldServiceProto";
+option objc_class_prefix = "HLW";
+
+package org.apache.dubbo.benchmark.grpc;
+
+//服务端接口类
+service Greeter {
+  rpc SayHello (HelloRequest) returns (HelloReply) {} //服务端接口方法
+}
+//请求参数 基于序号的协议字段映射，所以字段可以乱序，可缺段
+message HelloRequest {
+  string name = 1;
+  string sex = 2;
+}
+//响应参数
+message HelloReply {
+  string message = 1;
+}
+

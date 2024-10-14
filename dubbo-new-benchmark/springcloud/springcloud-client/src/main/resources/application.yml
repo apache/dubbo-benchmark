@@ -1,0 +1,34 @@
+server:
+  port: 8077
+spring:
+  application:
+    name: springcloud-client
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_ADDRESS:121.250.209.74:8848}
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${DB_HOST:121.250.209.74}:5432/benchmark
+    username: admin
+    password: cong0917
+
+benchmark:
+  test-threads: 32
+  warmup-iterations: 1
+  warmup-time-seconds: 2
+  measurement-iterations: 2
+  measurement-time: 5
+  protocol: openFeign
+  rpc-version: 3.3.0-beta.1
+  prometheus-url: http://${PROM_URL:localhost}:9090/api/v1/query_range
+
+hello:
+  service:
+    url: ${SERVER_URL:121.250.209.74:60080}
+
+
+mybatis-plus:
+  global-config:
+    db-config:
+      update-strategy: ignored # null也会更新

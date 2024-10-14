@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: springcloud-server
+  namespace: dubbo-benchmark
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: springcloud-server
+  template:
+    metadata:
+      labels:
+        app: springcloud-server
+    spec:
+      containers:
+        - name: springcloud-server
+          image: 15841721425/springcloud-server:1.3  # 替换为实际的镜像路径
+          imagePullPolicy: Always
+          ports:
+            - name: http-port
+              containerPort: 60080
+          env:
+            - name: NACOS_ADDRESS
+              value: nacos.dubbo-benchmark.svc.cluster.local
+          resources:
+            limits:
+              cpu: "1"
+              memory: "2048Mi"
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: springcloud-server-service
+spec:
+  selector:
+    app: springcloud-server
+  ports:
+    - protocol: TCP
+      port: 60080
+      targetPort: 60080
+  type: ClusterIP
