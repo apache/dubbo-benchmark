@@ -1,0 +1,43 @@
+server:
+  port: ${SERVICE:8080}
+
+spring:
+  application:
+    name: dubbo-provider-${PROVIDER_ID:1}
+
+provider:
+  id: ${PROVIDER_ID:1}
+  agent:
+    host: ${AGENT_HOST:localhost}
+    port: ${AGENT_PORT:8888}
+  qop:
+    window-seconds: 60
+    max-samples: 1000
+
+dubbo:
+  application:
+    name: ${spring.application.name}
+  cache:
+    base-path: ${user.home}/.dubbo/${spring.application.name}
+    file:
+      enable: true
+  protocol:
+    name: dubbo
+    port: ${protocol.port:20880}
+  registry:
+    address: nacos://${NACOS_HOST:127.0.0.1}:8848
+    register-mode: instance  # 强制应用级注册，避免接口级注册冲突
+    # 新增：注册所有服务（默认开启，显式配置更稳妥）
+    register-all: true
+  # 修正：元数据中心必须顶层配置，且补充关键属性
+  metadata-report:
+    address: nacos://${NACOS_HOST:127.0.0.1}:8848  # 与注册中心完全一致
+    cache-file: ${user.home}/.dubbo/${spring.application.name}/metadata.cache
+    report-mode: remote  # 新增：强制远程上报元数据到Nacos，而非仅本地缓存
+    sync-report: true    # 新增：同步上报元数据，避免异步上报丢失
+  scan:
+    base-packages: com.Dubbo_DLT
+  # 新增：提供者元数据暴露配置，确保接口元数据被正确上传
+  metadata:
+    service-exposure: true
+    export: true

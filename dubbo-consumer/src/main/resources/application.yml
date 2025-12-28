@@ -1,0 +1,30 @@
+server:
+  port: ${CONSUMER_PORT:8081}
+
+spring:
+  application:
+    name: dubbo-consumer-2
+
+dubbo:
+  application:
+    name: ${spring.application.name}
+    qos-enable: false  # 关闭消费者QOS，避免端口冲突
+  registry:
+    address: nacos://${NACOS_HOST:127.0.0.1}:8848
+    # 关键：指定服务发现模式为APPLICATION_FIRST（适配提供者应用级注册）
+    discovery-mode: application
+    # 关闭空保护（可选，若想避免1-37警告，可开启，但核心是解决地址为空问题）
+    # empty-protection: true
+  # 关键：消费者必须配置元数据中心，用于获取接口-应用映射
+  metadata-report:
+    address: nacos://${NACOS_HOST:127.0.0.1}:8848
+    cache-file: ${user.home}/.dubbo/${spring.application.name}/consumer-metadata.cache
+  # 引用服务配置（确保接口全类名与提供者一致）
+  reference:
+    com.Dubbo_DLT.netty.api.TestService:
+      check: false  # 启动时不检查提供者，避免启动失败
+      loadbalance: roundrobin
+      retries: 0
+      timeout: 5000
+  scan:
+    base-packages: com.Dubbo_DLT.consumer  # 消费者扫描包

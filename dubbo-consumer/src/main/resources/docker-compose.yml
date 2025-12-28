@@ -1,0 +1,117 @@
+version: '3.8'
+
+services:
+  # Nacos注册中心
+  nacos:
+    image: nacos/nacos-server:2.0.3
+    container_name: dubbo-nacos
+    environment:
+      - MODE=standalone
+    ports:
+      - "8848:8848"
+    networks:
+      - dubbo-network
+
+  # Agent服务
+  agent:
+    build: ./dubbo_agent
+    image: dubbo-agent:latest
+    container_name: dubbo-agent
+    ports:
+      - "8080:8080"   # HTTP管理端口
+      - "8888:8888"   # Netty通信端口
+    environment:
+      - SERVER_PORT=8080
+      - NETTY_PORT=8888
+    networks:
+      - dubbo-network
+    volumes:
+      - ./results:/app/results
+
+  # Provider实例（多个）
+  provider-1:
+    build: ./dubbo_provider
+    image: dubbo-provider:latest
+    container_name: provider-1
+    environment:
+      - PROVIDER_ID=1
+      - NACOS_HOST=nacos
+      - AGENT_HOST=agent
+    depends_on:
+      - nacos
+      - agent
+    networks:
+      - dubbo-network
+
+  provider-2:
+    build: ./dubbo_provider
+    image: dubbo-provider:latest
+    container_name: provider-2
+    environment:
+      - PROVIDER_ID=2
+      - NACOS_HOST=nacos
+      - AGENT_HOST=agent
+    depends_on:
+      - nacos
+      - agent
+    networks:
+      - dubbo-network
+
+  provider-3:
+    build: ./dubbo_provider
+    image: dubbo-provider:latest
+    container_name: provider-3
+    environment:
+      - PROVIDER_ID=3
+      - NACOS_HOST=nacos
+      - AGENT_HOST=agent
+    depends_on:
+      - nacos
+      - agent
+    networks:
+      - dubbo-network
+
+  # Consumer实例（多个）
+  consumer-1:
+    build: ./dubbo_consumer
+    image: dubbo-consumer:latest
+    container_name: consumer-1
+    environment:
+      - CONSUMER_ID=consumer-1
+      - INSTANCE_ID=consumer-instance-1
+      - NACOS_HOST=nacos
+      - AGENT_HOST=agent
+      - AGENT_PORT=8888
+      - TEST_LOADBALANCE=roundrobin
+    depends_on:
+      - nacos
+      - agent
+      - provider-1
+      - provider-2
+      - provider-3
+    networks:
+      - dubbo-network
+
+  consumer-2:
+    build: ./dubbo_consumer
+    image: dubbo-consumer:latest
+    container_name: consumer-2
+    environment:
+      - CONSUMER_ID=consumer-2
+      - INSTANCE_ID=consumer-instance-2
+      - NACOS_HOST=nacos
+      - AGENT_HOST=agent
+      - AGENT_PORT=8888
+      - TEST_LOADBALANCE=random
+    depends_on:
+      - nacos
+      - agent
+      - provider-1
+      - provider-2
+      - provider-3
+    networks:
+      - dubbo-network
+
+networks:
+  dubbo-network:
+    driver: bridge

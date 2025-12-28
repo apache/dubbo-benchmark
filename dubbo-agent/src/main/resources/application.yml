@@ -1,0 +1,39 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  application:
+    name: dubbo-agent
+agent:
+  localbanbce: ""
+
+  # 结果存储
+  results:
+    directory: ./results
+    retention-days: 7  # 结果保留天数
+
+  # 测试配置
+  test:
+    default-timeout-seconds: 300  # 默认超时时间
+    max-concurrent-tests: 10      # 最大并发测试数
+
+# 日志配置
+logging:
+  level:
+    com.dubbo.dlt.agent: INFO
+    org.springframework.web: INFO
+  file:
+    name: logs/agent.log
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# 管理端点（Spring Boot Actuator）
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always

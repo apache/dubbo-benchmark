@@ -1,0 +1,2 @@
+provideDubboFilter=com.dubbo.common.filter.ProvideDubboFilter
+consumerDubboFilter=com.dubbo.common.filter.ConsumerDubboFilter

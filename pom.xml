@@ -9,26 +9,6 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
 
-    <properties>
-        <java.source>1.8</java.source>
-        <java.target>1.8</java.target>
-        <dubbo.version>3.2.11</dubbo.version>
-        <dubbo-serialization-extension.version>1.0.1</dubbo-serialization-extension.version>
-        <netty.version>4.1.107.Final</netty.version>
-        <kryo.version>5.3.0</kryo.version>
-        <avro.version>1.11.3</avro.version>
-        <protostuff.version>1.8.0</protostuff.version>
-        <kryo-serializers.version>0.45</kryo-serializers.version>
-        <fst.version>2.48-jdk-6</fst.version>
-        <jmh.version>1.21</jmh.version>
-        <slf4j.version>1.7.25</slf4j.version>
-        <logback.version>1.3.12</logback.version>
-        <junit.version>4.12</junit.version>
-        <cli.version>1.4</cli.version>
-        <spring-cloud.version>2021.0.9</spring-cloud.version>
-        <spring-boot.version>2.7.18</spring-boot.version>
-    </properties>
-
     <modules>
         <module>benchmark-base</module>
         <module>server-base</module>
@@ -65,8 +45,36 @@
         <module>native-grpc-server</module>
         <module>springcloud-server</module>
         <module>springcloud-client</module>
-
+        <module>dubbo-provider</module>
+        <module>dubbo-consumer</module>
+        <module>dubbo-agent</module>
+        <module>dubbo-common</module>
     </modules>
+
+    <properties>
+        <java.source>1.8</java.source>
+        <java.target>1.8</java.target>
+        <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <dubbo.version>3.2.11</dubbo.version>
+        <dubbo-serialization-extension.version>1.0.1</dubbo-serialization-extension.version>
+        <netty.version>4.1.107.Final</netty.version>
+        <kryo.version>5.3.0</kryo.version>
+        <avro.version>1.11.3</avro.version>
+        <protostuff.version>1.8.0</protostuff.version>
+        <kryo-serializers.version>0.45</kryo-serializers.version>
+        <fst.version>2.48-jdk-6</fst.version>
+        <jmh.version>1.21</jmh.version>
+        <slf4j.version>1.7.25</slf4j.version>
+        <logback.version>1.3.12</logback.version>
+        <junit.version>4.12</junit.version>
+        <cli.version>1.4</cli.version>
+        <spring-cloud.version>2021.0.9</spring-cloud.version>
+        <spring-boot.version>2.7.18</spring-boot.version>
+        <nacos.version>2.2.3</nacos.version>
+        <jackson.version>2.15.2</jackson.version>
+        <aspectj.version>1.9.19</aspectj.version>
+    </properties>
 
     <dependencyManagement>
         <dependencies>
@@ -84,10 +92,16 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <!-- use netty 4 by default -->
             <dependency>
                 <groupId>org.apache.dubbo</groupId>
                 <artifactId>dubbo-dependencies-bom</artifactId>
+                <version>${dubbo.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo-bom</artifactId>
                 <version>${dubbo.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
@@ -116,38 +130,32 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
             <dependency>
                 <groupId>com.esotericsoftware</groupId>
                 <artifactId>kryo</artifactId>
                 <version>${kryo.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>de.ruedigermoeller</groupId>
                 <artifactId>fst</artifactId>
                 <version>${fst.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.openjdk.jmh</groupId>
                 <artifactId>jmh-core</artifactId>
                 <version>${jmh.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.openjdk.jmh</groupId>
                 <artifactId>jmh-generator-annprocess</artifactId>
                 <version>${jmh.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>${junit.version}</version>
                 <scope>test</scope>
             </dependency>
-
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
@@ -158,7 +166,6 @@
                 <artifactId>dubbo-serialization-native-hession</artifactId>
                 <version>${dubbo.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>commons-cli</groupId>
                 <artifactId>commons-cli</artifactId>
@@ -169,7 +176,11 @@
                 <artifactId>avro</artifactId>
                 <version>${avro.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -188,14 +199,11 @@
                                 <goal>copy-dependencies</goal>
                             </goals>
                             <configuration>
-                                <outputDirectory>
-                                    ${project.build.directory}/libs
-                                </outputDirectory>
+                                <outputDirectory>${project.build.directory}/libs</outputDirectory>
                             </configuration>
                         </execution>
                     </executions>
                 </plugin>
-
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
@@ -210,13 +218,12 @@
                     </configuration>
                 </plugin>
             </plugins>
-
         </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.7.0</version>
+                <version>3.11.0</version>
                 <configuration>
                     <source>${java.source}</source>
                     <target>${java.target}</target>
