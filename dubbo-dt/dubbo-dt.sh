@@ -9,15 +9,15 @@ echo "============================================="
 echo ""
 echo "Service Configuration / 服务配置"
 
-read -p "Enter number of Dubbo Produces (default: 10) / 输入Produce数量(默认: 10): " PRODUCE_NUM
-PRODUCE_NUM=${PRODUCE_NUM:-10}
+read -p "Enter number of Dubbo Providers (default: 10) / 输入Provider(默认: 10): " PROVIDER_NUM
+PROVIDER_NUM=${PROVIDER_NUM:-10}
 
 read -p "Enter number of Dubbo Consumers (default: 1) / 输入Consumer数量(默认: 1): " CONSUMER_NUM
 CONSUMER_NUM=${CONSUMER_NUM:-1}
 
 echo ""
 echo "Configuration Info / 配置信息"
-echo "Produce Count: $PRODUCE_NUM"
+echo "Provider Count: $PROVIDER_NUM"
 echo "Consumer Count: $CONSUMER_NUM"
 
 echo ""
@@ -37,8 +37,8 @@ AGENT_REQUEST_CNT=${AGENT_REQUEST_CNT:-100}
 read -p "Enter Agent serialization method / 输入Agent序列化方式 (默认/Defaul:hessian2): " AGENT_SERIALIZE
 AGENT_SERIALIZE=${AGENT_SERIALIZE:-hessian2}
 
-PRODUCE_SERVICE_START_PORT=8080
-PRODUCE_DUBBO_START_PORT=20880
+PROVIDER_SERVICE_START_PORT=8080
+PROVIDER_DUBBO_START_PORT=20880
 CONSUMER_START_PORT=8180
 
 COMPOSE_FILE="docker-compose.yml"
@@ -109,18 +109,18 @@ services:
     restart: unless-stopped
 EOF
 
-# Generate Produces
-for (( i=1; i<=PRODUCE_NUM; i++ ))
+# Generate Providers
+for (( i=1; i<=PROVIDER_NUM; i++ ))
 do
-  PRODUCE_SERVICE_PORT=$((PRODUCE_SERVICE_START_PORT + i - 1))
-  PRODUCE_DUBBO_PORT=$((PRODUCE_DUBBO_START_PORT + i - 1))
+  PROVIDER_SERVICE_PORT=$((PROVIDER_SERVICE_START_PORT + i - 1))
+  PROVIDER_DUBBO_PORT=$((PROVIDER_DUBBO_START_PORT + i - 1))
 
   if [ $i -eq 1 ]; then
-    CONTAINER_NAME="dubbo-produce"
-    LOG_DIR="produce"
+    CONTAINER_NAME="dubbo-provider"
+    LOG_DIR="provider"
   else
-    CONTAINER_NAME="dubbo-produce-$i"
-    LOG_DIR="produce-$i"
+    CONTAINER_NAME="dubbo-provider-$i"
+    LOG_DIR="provider-$i"
   fi
 
   cat >> $COMPOSE_FILE << EOF
@@ -128,16 +128,16 @@ do
   ${CONTAINER_NAME}:
     build:
       context: .
-      dockerfile: ./dubbo-produce/Dockerfile
+      dockerfile: ./dubbo-provider/Dockerfile
     container_name: ${CONTAINER_NAME}
     environment:
-      - SERVICE_PORT=${PRODUCE_SERVICE_PORT}
+      - SERVICE_PORT=${PROVIDER_SERVICE_PORT}
       - SPRING_APPLICATION_NAME=${CONTAINER_NAME}
       - NACOS_HOST=nacos-server
       - AGENT_HOST=dubbo-agent
       - DUBBO_REGISTER_MODE=instance
       - AGENT_PORT=8082
-      - DUBBO_PROTOCOL_PORT=${PRODUCE_DUBBO_PORT}
+      - DUBBO_PROTOCOL_PORT=${PROVIDER_DUBBO_PORT}
       - DUBBO_REGISTER_MODE=instance
       - DUBBO_PROTOCOL_NAME=dubbo
       - DUBBO_LOADBALANCE=leastactive
@@ -147,8 +147,8 @@ do
       - DUBBO_SHUTDOWN_WAIT_SECONDS=60
       - DUBBO_REGISTRY_CHECK=false
     ports:
-      - "${PRODUCE_SERVICE_PORT}:${PRODUCE_SERVICE_PORT}"
-      - "${PRODUCE_DUBBO_PORT}:${PRODUCE_DUBBO_PORT}"
+      - "${PROVIDER_SERVICE_PORT}:${PROVIDER_SERVICE_PORT}"
+      - "${PROVIDER_DUBBO_PORT}:${PROVIDER_DUBBO_PORT}"
     volumes:
       - ./logs/${LOG_DIR}:/app/logs
       - dubbo-cache:/root/.dubbo
@@ -207,13 +207,13 @@ do
         condition: service_started
 EOF
 
-  # Add dependencies for all produces
-  for (( p=1; p<=PRODUCE_NUM; p++ ))
+  # Add dependencies for all providers
+  for (( p=1; p<=PROVIDER_NUM; p++ ))
   do
     if [ $p -eq 1 ]; then
-      DEP_NAME="dubbo-produce"
+      DEP_NAME="dubbo-provider"
     else
-      DEP_NAME="dubbo-produce-$p"
+      DEP_NAME="dubbo-provider-$p"
     fi
     echo "      ${DEP_NAME}:" >> $COMPOSE_FILE
     echo "        condition: service_started" >> $COMPOSE_FILE
@@ -265,14 +265,14 @@ echo "Nacos: localhost:8848"
 echo "Dubbo Admin: localhost:8083"
 echo "Dubbo Agent: localhost:8082"
 echo ""
-for (( i=1; i<=PRODUCE_NUM; i++ ))
+for (( i=1; i<=PROVIDER_NUM; i++ ))
 do
-  PRODUCE_SERVICE_PORT=$((PRODUCE_SERVICE_START_PORT + i - 1))
-  PRODUCE_DUBBO_PORT=$((PRODUCE_DUBBO_START_PORT + i - 1))
+  PROVIDER_SERVICE_PORT=$((PROVIDER_SERVICE_START_PORT + i - 1))
+  PROVIDER_DUBBO_PORT=$((PROVIDER_DUBBO_START_PORT + i - 1))
   if [ $i -eq 1 ]; then
-    echo "Dubbo Produce 1: localhost:${PRODUCE_SERVICE_PORT} (dubbo://localhost:${PRODUCE_DUBBO_PORT})"
+    echo "Dubbo Provider 1: localhost:${PROVIDER_SERVICE_PORT} (dubbo://localhost:${PROVIDER_DUBBO_PORT})"
   else
-    echo "Dubbo Produce ${i}: localhost:${PRODUCE_SERVICE_PORT} (dubbo://localhost:${PRODUCE_DUBBO_PORT})"
+    echo "Dubbo Provider ${i}: localhost:${PROVIDER_SERVICE_PORT} (dubbo://localhost:${PROVIDER_DUBBO_PORT})"
   fi
 done
 
