@@ -16,11 +16,11 @@ dubbo:
     name: dubbo
     port: ${protocol.port:20880}
   registry:
-    address: nacos://${NACOS_HOST:10.6.5.179}:8848
+    address: nacos://${NACOS_HOST:127.0.0.1}:8848
     register-mode: instance
     register-all: true
   metadata-report:
-    address: nacos://${NACOS_HOST:10.6.5.179}:8848
+    address: nacos://${NACOS_HOST:127.0.0.1}:8848
     cache-file: ${user.home}/.dubbo/${spring.application.name}/metadata.cache
     report-mode: remote
     sync-report: true

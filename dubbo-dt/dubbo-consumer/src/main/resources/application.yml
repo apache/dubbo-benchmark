@@ -9,8 +9,8 @@ dubbo:
     name: ${spring.application.name}
     qos-enable: false
   registry:
-    address: nacos://${NACOS_HOST:10.6.5.179}:8848
+    address: nacos://${NACOS_HOST:127.0.0.1}:8848
     discovery-mode: application
   metadata-report:
-    address: nacos://${NACOS_HOST:10.6.5.179}:8848
+    address: nacos://${NACOS_HOST:127.0.0.1}:8848
     cache-file: ./.dubbo/${spring.application.name}/consumer-metadata.cache

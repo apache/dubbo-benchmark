@@ -9,7 +9,7 @@ echo "============================================="
 echo ""
 echo "Service Configuration / 服务配置"
 
-read -p "Enter number of Dubbo Providers (default: 10) / 输入Provider(默认: 10): " PROVIDER_NUM
+read -p "Enter number of Dubbo Providers (default: 10) / 输入Provider数量(默认: 10): " PROVIDER_NUM
 PROVIDER_NUM=${PROVIDER_NUM:-10}
 
 read -p "Enter number of Dubbo Consumers (default: 1) / 输入Consumer数量(默认: 1): " CONSUMER_NUM
@@ -22,7 +22,7 @@ echo "Consumer Count: $CONSUMER_NUM"
 
 echo ""
 echo "Configure Agent Test Parameters / 配置Agent测试参数"
-read -p "Agent Namespace / agent的命名空间 (默认/Default:dubbo-agent): " DUBBO_AGENT
+read -p "Agent Namespace (default: dubbo-agent): " DUBBO_AGENT
 DUBBO_AGENT=${DUBBO_AGENT:-dubbo-agent}
 read -p "Enter Agent load balancing strategy / 输入Agent负载均衡策略(默认/Default:ConsistentHash): " AGENT_LB
 AGENT_LB=${AGENT_LB:-ConsistentHash}

@@ -13,6 +13,12 @@ https://img.shields.io/badge/build-passing-brightgreen
 ##### 先执行命令: 
 
 ```
+cd dubbo-dt.sh
+```
+
+**然后执行:**
+
+```
 chmod +x dubbo-dt.sh
 ```
 
@@ -54,9 +60,7 @@ docker compose up -d
 
 
 
-
-
-#### 方式二:本地部署:
+#### 方式二:本地部署(有一定dubbo使用经验):
 
 ###### 克隆本项目到本地
 
@@ -79,26 +83,38 @@ docker compose up -d
 
 ##### Consumer 端配置
 
-- ###### 首先在需要测试的 Consumer 上添加注解：
+**首先在需要测试的 Consumer 的启动类上添加注解：**
 
 ```java
+@SpringBootApplication(scanBasePackages = {"com.dubbo.common","com.dubbo.consumer"})
+@EnableDubbo
 @EnableDubboTest(basePackages = {"com.dubbo.consumer", "com.dubbo.common"}, testModel = "consumer")
+public class ConsumerApplication {
+    public static void main(String[] args) {
+        ConfigurableApplicationContext context = 
+            SpringApplication.run(ConsumerApplication.class, args);
+    }
+}
 ```
 
-​	**basePackages**: api的包路径
+**@EnableDubboTest**
 
-​	**testModel**: 当前的测试模式是consumer就写consumer，如果即是consumer也是provide就不用写
+> **basePackages**: api的包路径
+>
+> **testModel**: 当前的测试模式是consumer就写consumer，如果即是consumer也是provide就不用写
 
-- 在抽象 API 上添加注解：
+**在测试方法上 API 上添加注解：**
 
 ```java
  @DubboInvokeStat(namespace = "agentname",  argKey = "AGENT_NAME_HELLO" ,argValue= DubboInvokeEnum.class) 
 ```
-**namespace** : 这次测试的agent名称
+**@DubboInvokeStat**
 
-**argKey** : 你枚举对于的key的名称
-
-**argValue** : 对应的测试数据枚举
+> **namespace** : 这次测试的agent名称
+>
+> **argKey** : 你枚举对于的key的名称
+>
+> **argValue** : 对应的测试数据枚举
 
 ##### Mock数据枚举类（你测试数据写的地方）
 ###### 重点：key是要测试的mock数据名称，里面是对应的值
@@ -144,6 +160,8 @@ public class DubboTest<T> {
 @EnableDubboTest(basePackages = {"com.dubbo.consumer", "com.dubbo.common"}, testModel = "provider")
 ```
 
-​	**basePackages**: api的包路径
+**@EnableDubboTest**	
 
-​	**testModel**: 当前的测试模式是provider就写provider，如果即是consumer也是provide就不用写
+> **basePackages**: api的包路径
+>
+> **testModel**: 当前的测试模式是provider就写provider，如果即是consumer也是provide就不用写
