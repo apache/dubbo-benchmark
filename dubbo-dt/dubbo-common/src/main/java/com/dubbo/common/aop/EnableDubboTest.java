@@ -1,9 +1,7 @@
 package com.dubbo.common.aop;
 
 import com.dubbo.common.consumer.NettyConsumer;
-import com.dubbo.common.netty.lister.MessageListener;
 import org.springframework.context.annotation.Import;
-import org.springframework.stereotype.Component;
 
 import java.lang.annotation.*;
 
@@ -11,8 +9,9 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-@Import(NettyConsumer.class)
+@Import(DubboTestImportSelector.class)
 public @interface EnableDubboTest {
+    String testModel() default "ALL";
 
     String[] basePackages() default {};
 

@@ -26,7 +26,7 @@ RUN mkdir -p /app/logs
 
 COPY --from=builder /build/dubbo-consumer/target/dubbo-consumer-*.jar app.jar
 
-RUN jar tf app.jar | grep -E "(DubboInvokeStat|DubboTest)" | head -10 || echo "未找到相关类"
+RUN jar tf app.jar | grep -E "(DubboInvokeStat|DubboTest)" | head -10 || echo "未找到相关类/No relevant class was found"
 
 EXPOSE 8081
 ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -jar app.jar"]

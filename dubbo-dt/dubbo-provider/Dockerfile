@@ -13,13 +13,13 @@ RUN pwd && ls -la && \
     if [ -d "dubbo-common" ]; then \
         mvn clean install -DskipTests -pl dubbo-common -am; \
     fi && \
-    if [ -d "dubbo-produce" ]; then \
-        cd dubbo-produce && \
+    if [ -d "dubbo-provider" ]; then \
+        cd dubbo-provider && \
         mvn clean package spring-boot:repackage -DskipTests && \
         find target -name "*.jar" -type f | xargs ls -lh && \
         find target -name "original-*.jar" -type f -exec echo "  - {}" \; && \
-        find target -name "dubbo-produce*.jar" ! -name "original*" -type f -exec echo "  - {}" \; && \
-        for jar in $(find target -name "dubbo-produce*.jar" ! -name "original*" -type f); do \
+        find target -name "dubbo-provider*.jar" ! -name "original*" -type f -exec echo "  - {}" \; && \
+        for jar in $(find target -name "dubbo-provider*.jar" ! -name "original*" -type f); do \
             jar tf "$jar" | grep -E "(MANIFEST.MF|Main-Class)" | head -3; \
         done; \
     else \
@@ -33,7 +33,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 WORKDIR /app
 RUN mkdir -p /app/logs && mkdir -p /root/.dubbo
 
-COPY --from=builder /build/dubbo-produce/target/dubbo-produce-*.jar app.jar
+COPY --from=builder /build/dubbo-provider/target/dubbo-provider-*.jar app.jar
 
 RUN ls -lh /app/ && \
     if command -v jar >/dev/null 2>&1; then \

@@ -72,13 +72,6 @@ public class SystemMonitorUtil {
         int memoryRate = (int) Math.round((double) memory_user / memory_max * 100);
         MEMORY_USAGE.put(count.get(), memoryRate);
     }
-
-    public static int getJvmHeapUsageRate() {
-        MemoryUsage heap = MEMORY_MX_BEAN.getHeapMemoryUsage();
-        if (heap.getMax() == 0) return 0;
-        return (int) Math.round((double) heap.getUsed() / heap.getMax() * 100);
-    }
-
     private static long[] getProcessCpuTimes() {
         com.sun.management.OperatingSystemMXBean sunOsBean = (com.sun.management.OperatingSystemMXBean) OS_MX_BEAN;
         return new long[]{sunOsBean.getProcessCpuTime(), System.nanoTime()};

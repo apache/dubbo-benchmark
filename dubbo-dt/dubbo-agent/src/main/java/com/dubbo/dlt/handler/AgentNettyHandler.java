@@ -35,9 +35,7 @@ public class AgentNettyHandler extends SimpleChannelInboundHandler<Message> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Message msg) throws Exception {
-        System.out.println(msg);
         MessageType type = msg.getType();
-        System.out.println(type);
         if (type == MessageType.HEARTBEAT) {
             ClientSession clientSession = nettyServer.getAllSessions().get(msg.getClientType() + "-" + msg.getClientId());
             if (clientSession.isHeartbeatTimeout()) {
@@ -59,14 +57,11 @@ public class AgentNettyHandler extends SimpleChannelInboundHandler<Message> {
                     TestConfig testConfig1 = new TestConfig();
                     testConfig1.setTestMode(testConfig1.getTestMode());
                     testConfig1.setNamespace(testConfig.getNamespace());
-                    logger.info(testConfig1.getNamespace());
                     testConfig1.setDurationSeconds(testConfig.getDurationSeconds());
-                    logger.info(String.valueOf(testConfig1.getDurationSeconds()));
                     testConfig1.setRequestCount(testConfig.getRequestCount());
                     testConfig1.setLocadbance(testConfig.getLocadbance());
                     testConfig1.setTestMode(testConfig.getTestMode());
                     testConfig1.setSerialization(testConfig.getSerialization());
-                    logger.info(String.valueOf(testConfig1.getLocadbance()));
                     message.setData(JSONObject.toJSONString(testConfig1));
                     session.getChannel().writeAndFlush(message);
                     }
@@ -83,7 +78,7 @@ public class AgentNettyHandler extends SimpleChannelInboundHandler<Message> {
                         }
                 );
                 for (ConsumerTestResult testResult : testResultList) {
-                    String file_path = "consumer_result" + testResult.getConsumerId() + ".txt";
+                    String file_path = "consumer-result-" + testResult.getConsumerId() + ".txt";
                     appendTestResultToFile(testResult, file_path);
                 }
                 ConsumerGeneratorHtml.writeConsumerHtml(msg.getData(), testConfig.getTestMode().toString().toLowerCase()+ "-"+msg.getClientType().toString().toLowerCase()+'-' + msg.getClientId());
@@ -97,10 +92,10 @@ public class AgentNettyHandler extends SimpleChannelInboundHandler<Message> {
                 if (msg.getData().isEmpty() || msg.getData().equals("{}")) {
                     return;
                 }
-                String file_path = "provide_result" + msg.getClientId() + ".txt";
+                String file_path = "provide-result-" + msg.getClientId() + ".txt";
                 appendProvideTestResultToFile(msg.getData(), file_path);
                 nettyServer.getAllSessions().remove(msg.getClientType() + "-" + msg.getClientId());
-                String file_html_path = "provide_ressult" + msg.getClientId();
+                String file_html_path = "provide-ressult-" + msg.getClientId();
                 ProduceGeneratorHtml.generateCallTrendHtml(msg.getData() , file_html_path);
             }
         }else if (type == MessageType.HEARTBEAT){}

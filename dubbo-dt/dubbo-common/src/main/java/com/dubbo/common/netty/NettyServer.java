@@ -2,15 +2,11 @@ package com.dubbo.common.netty;
 
 
 import com.dubbo.common.conf.ClientType;
-import com.dubbo.common.conf.ControlCommand;
 import com.dubbo.common.entry.ClientSession;
 import com.dubbo.common.entry.Message;
-import com.dubbo.common.entry.TestConfig;
 import com.dubbo.common.netty.decoder.MessageDecoder;
 import com.dubbo.common.netty.encoder.MessageEncoder;
-import com.dubbo.common.netty.protocol.ControlMessage;
 import com.dubbo.common.netty.protocol.ShutdownMessage;
-import com.alibaba.fastjson2.JSONObject;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -76,24 +72,6 @@ public class NettyServer {
             Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
         }catch (Exception e){
             e.printStackTrace();
-        }
-    }
-
-    public void registerClient(String clientId, Channel channel, ClientType type) {
-        ClientSession session = new ClientSession(clientId, channel, type);
-        clientSessions.put(clientId, session);
-    }
-
-    public void unregisterClient(String clientId) {
-        clientSessions.remove(clientId);
-    }
-
-    public void sendToClient(String clientId, Message message) {
-        ClientSession session = clientSessions.get(clientId);
-        if (session != null && session.getChannel().isActive()) {
-            session.getChannel().writeAndFlush(message);
-        } else {
-            logger.warn("client connect not find: {}", clientId);
         }
     }
 

@@ -1,4 +1,4 @@
-package com.dubbo.common.produce;
+package com.dubbo.common.provider;
 
 import com.alibaba.fastjson2.JSON;
 import com.dubbo.common.conf.ClientType;
@@ -15,11 +15,11 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 import java.util.Map;
-public class ProduceHandler extends SimpleChannelInboundHandler<Message> {
-    private static final Logger log = LoggerFactory.getLogger(ProduceHandler.class);
+public class ProviderHandler extends SimpleChannelInboundHandler<Message> {
+    private static final Logger log = LoggerFactory.getLogger(ProviderHandler.class);
     private final CallResultManager callResultManager = CallResultManager.getInstance();
     private String providerId;
-    ProduceHandler(String providerId) {
+    ProviderHandler(String providerId) {
         this.providerId = providerId;
     }
     @Override

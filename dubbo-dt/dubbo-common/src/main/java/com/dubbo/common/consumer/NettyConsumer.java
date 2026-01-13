@@ -1,13 +1,10 @@
 package com.dubbo.common.consumer;
 
 import com.dubbo.common.conf.ClientType;
-import com.dubbo.common.conf.ControlCommand;
 import com.dubbo.common.conf.MessageType;
 import com.dubbo.common.entry.Message;
-import com.dubbo.common.entry.QoPData;
 import com.dubbo.common.entry.TestConfig;
 import com.dubbo.common.netty.NettyClient;
-import com.dubbo.common.netty.lister.MessageListener;
 import com.dubbo.common.netty.protocol.*;
 import com.dubbo.common.scan.SimpleDubboScanner;
 import com.alibaba.fastjson2.JSONObject;
@@ -21,7 +18,7 @@ import java.util.Collections;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-public class NettyConsumer implements MessageListener {
+public class NettyConsumer{
 
     private String agentHost;
     private int agentPort;
@@ -36,8 +33,6 @@ public class NettyConsumer implements MessageListener {
     private TestExecutor testExecutor = new TestExecutor();
     private volatile boolean isRegistered = false;
     private volatile boolean isRunning = true;
-
-    private Logger logger = LoggerFactory.getLogger(NettyConsumer.class);
 
     private String getSafeEnvString(String envKey, String defaultValue) {
         try {
@@ -126,86 +121,6 @@ public class NettyConsumer implements MessageListener {
         }, 10, 10, TimeUnit.SECONDS);
     }
 
-    @Override
-    public void onMessage(Message message) {
-        switch (message.getType()) {
-            case ACK:
-                handleAckMessage((AckMessage) message);
-                break;
-            case CONTROL:
-                handleControlMessage((ControlMessage) message);
-                break;
-            case SHUTDOWN:
-                handleShutdownMessage((ShutdownMessage) message);
-                break;
-            default:
-        }
-    }
-
-    @Override
-    public void onControlMessage(ControlMessage message) {
-        handleControlMessage(message);
-    }
-
-    @Override
-    public void onShutdown(ShutdownMessage message) {
-        handleShutdownMessage(message);
-    }
-
-    private void handleAckMessage(AckMessage ack) {
-        if (ack.isSuccess()) {
-
-            if ("注册成功".equals(ack.getMessage())) {
-                isRegistered = true;
-            }
-        } else {
-            logger.error("Consumer收到错误ACK: " + ack.getMessage());
-        }
-    }
-
-    private void handleControlMessage(ControlMessage controlMsg) {
-        if (controlMsg.getCommand() == ControlCommand.REQUEST_QOP) {
-            handleQoPRequest();
-        } else {
-        }
-    }
-
-    private void handleQoPRequest() {
-        try {
-            QoPData qoPData = new QoPData();
-            QoPMessage qoPMessage = new QoPMessage();
-            qoPMessage.setQoPData(qoPData);
-            qoPMessage.setTimestamp(System.currentTimeMillis());
-            nettyClient.sendMessage(qoPMessage);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    private void handleShutdownMessage(ShutdownMessage shutdownMsg) {
-        AckMessage ack = new AckMessage();
-        ack.setRequestId(shutdownMsg.getMessageId());
-        ack.setSuccess(true);
-        ack.setMessage("recall commond to shutdown");
-        ack.setTimestamp(System.currentTimeMillis());
-
-        nettyClient.sendMessage(ack);
-        new Thread(() -> {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-            System.exit(0);
-        }).start();
-    }
-
-    private String getHostName() {
-        try {
-            return java.net.InetAddress.getLocalHost().getHostName();
-        } catch (Exception e) {
-            return "unknown";
-        }
-    }
     private void scheduleReconnect() {
         ScheduledExecutorService reconnectScheduler = Executors.newSingleThreadScheduledExecutor();
         reconnectScheduler.schedule(() -> {

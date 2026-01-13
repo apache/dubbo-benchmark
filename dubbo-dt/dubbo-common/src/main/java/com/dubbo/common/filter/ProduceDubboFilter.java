@@ -72,12 +72,4 @@ public class ProduceDubboFilter implements Filter {
             return null;
         }
     }
-
-    private String getStatName(DubboInvokeStat annotation, Class<?> serviceInterface) {
-        String name = annotation.value();
-        if (!name.isEmpty()) {
-            return name;
-        }
-        return serviceInterface.getSimpleName();
-    }
 }

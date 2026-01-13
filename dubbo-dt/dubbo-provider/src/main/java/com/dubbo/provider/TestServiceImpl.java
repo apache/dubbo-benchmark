@@ -1,10 +1,9 @@
-package com.dubbo.produce;
+package com.dubbo.provider;
 
 import com.dubbo.common.aop.DubboStatManager;
 import com.dubbo.common.api.TestService;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 
 
 @DubboService

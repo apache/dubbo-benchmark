@@ -4,15 +4,14 @@ import com.dubbo.common.conf.TestMode;
 import com.dubbo.common.entry.TestConfig;
 import com.dubbo.dlt.handler.AgentNettyHandler;
 import com.dubbo.common.netty.NettyServer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.netty.channel.ChannelHandler;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import java.util.Collections;
+import java.util.Arrays;
+import java.util.List;
 
 public class NettyServeragentService {
-    private static final Logger logger = LoggerFactory.getLogger(NettyServeragentService.class);
 
     private String safeGetEnv(String key, String defaultValue) {
         String value = System.getenv(key);
@@ -45,10 +44,6 @@ public class NettyServeragentService {
     private Long safeGetDurationSeconds(String key, Long defaultValue) {
         return safeGetEnvLong(key, defaultValue);
     }
-
-    String nettyPortTest = System.getProperty("agent.netty.port", "8888");
-    private int nettyPort = Integer.parseInt(nettyPortTest);
-
     private Thread nettyServerThread;
     private NettyServer nettyServer;
 
@@ -62,7 +57,7 @@ public class NettyServeragentService {
                 Integer requestCount = safeGetEnvInt("AGENT_REQUEST_COUNT", 100);
                 String loadbalacne = safeGetEnv("AGENT_LOCADBANCE", "random");
                 String serialization = safeGetEnv("AGENT_SERIALIZATION", "hessian2");
-                String testModeString = safeGetEnv("AGENT_TEST_MODE", "");
+                String testModeString = safeGetEnv("AGENT_TEST_MODE", "FIXED_COUNT");
                 TestMode testMode =  TestMode.valueOf(testModeString);
                 TestConfig testConfig = new TestConfig();
                 testConfig.setLocadbance(loadbalacne);
@@ -74,7 +69,10 @@ public class NettyServeragentService {
                 int port = Integer.parseInt(servicePort);
                 nettyServer = new NettyServer(port);
                 AgentNettyHandler agentNettyHandler = new AgentNettyHandler(nettyServer, testConfig);
-                nettyServer.setCustomHandlers(Collections.singletonList(agentNettyHandler));
+                List<ChannelHandler> customHandlers = Arrays.asList(
+                        agentNettyHandler
+                );
+                nettyServer.setCustomHandlers(customHandlers);
                 try {
                     nettyServer.start();
                 } catch (Exception e) {

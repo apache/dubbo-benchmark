@@ -7,7 +7,7 @@ COPY . /build/
 RUN mvn clean package -DskipTests && \
     if [ -d "dubbo-agent/target" ]; then \
         find dubbo-agent/target -name "*.jar" -type f | xargs ls -lh && \
-        ls -lh dubbo-agent/target/lib/ 2>/dev/null || echo "无依赖库目录"; \
+        ls -lh dubbo-agent/target/lib/ 2>/dev/null || echo "无依赖库目录/Directory without dependency libraries"; \
     fi
 
 FROM eclipse-temurin:8-jdk
@@ -21,7 +21,7 @@ COPY --from=builder /build/dubbo-agent/target/dubbo-agent-*.jar app.jar
 COPY --from=builder /build/dubbo-agent/target/lib /app/lib/
 
 RUN ls -la /app/ && \
-    ls -la /app/lib/ 2>/dev/null || echo "无lib目录" && \
+    ls -la /app/lib/ 2>/dev/null || echo "无lib目录/No "lib" directory" && \
     jar xf app.jar META-INF/MANIFEST.MF && \
     echo "Main-Class: $(grep 'Main-Class' META-INF/MANIFEST.MF)" && \
     echo "Class-Path: $(grep 'Class-Path' META-INF/MANIFEST.MF | head -1)"

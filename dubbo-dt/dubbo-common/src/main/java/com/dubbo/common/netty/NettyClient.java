@@ -1,10 +1,6 @@
 package com.dubbo.common.netty;
 
-import com.dubbo.common.conf.ClientType;
-import com.dubbo.common.entry.ConsumerTestResult;
 import com.dubbo.common.entry.Message;
-import com.dubbo.common.entry.QoPData;
-import com.dubbo.common.entry.TestConfig;
 import com.dubbo.common.netty.decoder.MessageDecoder;
 import com.dubbo.common.netty.encoder.MessageEncoder;
 import com.dubbo.common.netty.protocol.*;
@@ -78,15 +74,6 @@ public class NettyClient {
         this.channel = future.channel();
     }
 
-    private void registerToServer() {
-        RegisterMessage registerMsg = new RegisterMessage();
-        registerMsg.setClientId(clientId);
-        registerMsg.setClientType(ClientType.CONSUMER);
-        registerMsg.setTimestamp(System.currentTimeMillis());
-
-        sendMessage(registerMsg);
-    }
-
     public void sendMessage(Message message) {
         if (channel != null && channel.isActive()) {
             channel.writeAndFlush(message).addListener(future -> {
@@ -99,41 +86,6 @@ public class NettyClient {
         }
     }
 
-    public void sendReady(String testId, TestConfig config) {
-        ReadyMessage readyMsg = new ReadyMessage();
-        readyMsg.setClientId(clientId);
-        readyMsg.setTestId(testId);
-        readyMsg.setTestConfig(config);
-        readyMsg.setTimestamp(System.currentTimeMillis());
-
-        sendMessage(readyMsg);
-    }
-
-    public void sendResult(String testId, ConsumerTestResult result) {
-        ResultMessage resultMsg = new ResultMessage();
-        resultMsg.setClientId(clientId);
-        resultMsg.setTestId(testId);
-        resultMsg.setTestResult(result);
-        resultMsg.setTimestamp(System.currentTimeMillis());
-        sendMessage(resultMsg);
-    }
-
-    public void sendQoPData(QoPData qoPData) {
-        QoPMessage qoPMessage = new QoPMessage();
-        qoPMessage.setClientId(clientId);
-        qoPMessage.setQoPData(qoPData);
-        qoPMessage.setTimestamp(System.currentTimeMillis());
-
-        sendMessage(qoPMessage);
-    }
-
-    public void sendShutdown() {
-        ShutdownMessage shutdownMsg = new ShutdownMessage();
-        shutdownMsg.setClientId(clientId);
-        shutdownMsg.setTimestamp(System.currentTimeMillis());
-
-        sendMessage(shutdownMsg);
-    }
 
     public void disconnect() {
         if (channel != null) {

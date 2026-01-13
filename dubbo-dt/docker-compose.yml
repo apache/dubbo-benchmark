@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   nacos:
-    image: nacos/nacos-server:v2.1.0
+    image: nacos/nacos-server:v2.5.2
     container_name: nacos-server
     environment:
       - PREFER_HOST_MODE=hostname
@@ -51,6 +51,7 @@ services:
       - "8082:8082"
     volumes:
       - ./logs/agent:/app/logs
+      - .:/app
     depends_on:
       nacos:
         condition: service_healthy
@@ -68,6 +69,7 @@ services:
       - SPRING_APPLICATION_NAME=dubbo-produce
       - NACOS_HOST=nacos-server
       - AGENT_HOST=dubbo-agent
+      - DUBBO_REGISTER_MODE=instance
       - AGENT_PORT=8082
       - DUBBO_PROTOCOL_PORT=20880
       - DUBBO_REGISTER_MODE=instance
@@ -101,6 +103,7 @@ services:
       - SPRING_APPLICATION_NAME=dubbo-produce-2
       - NACOS_HOST=nacos-server
       - AGENT_HOST=dubbo-agent
+      - DUBBO_REGISTER_MODE=instance
       - AGENT_PORT=8082
       - DUBBO_PROTOCOL_PORT=20881
       - DUBBO_REGISTER_MODE=instance
@@ -134,6 +137,7 @@ services:
       - SPRING_APPLICATION_NAME=dubbo-produce-3
       - NACOS_HOST=nacos-server
       - AGENT_HOST=dubbo-agent
+      - DUBBO_REGISTER_MODE=instance
       - AGENT_PORT=8082
       - DUBBO_PROTOCOL_PORT=20882
       - DUBBO_REGISTER_MODE=instance
@@ -167,6 +171,7 @@ services:
       - SPRING_APPLICATION_NAME=dubbo-produce-4
       - NACOS_HOST=nacos-server
       - AGENT_HOST=dubbo-agent
+      - DUBBO_REGISTER_MODE=instance
       - AGENT_PORT=8082
       - DUBBO_PROTOCOL_PORT=20883
       - DUBBO_REGISTER_MODE=instance
@@ -200,6 +205,7 @@ services:
       - SPRING_APPLICATION_NAME=dubbo-produce-5
       - NACOS_HOST=nacos-server
       - AGENT_HOST=dubbo-agent
+      - DUBBO_REGISTER_MODE=instance
       - AGENT_PORT=8082
       - DUBBO_PROTOCOL_PORT=20884
       - DUBBO_REGISTER_MODE=instance
@@ -233,6 +239,7 @@ services:
       - SPRING_APPLICATION_NAME=dubbo-produce-6
       - NACOS_HOST=nacos-server
       - AGENT_HOST=dubbo-agent
+      - DUBBO_REGISTER_MODE=instance
       - AGENT_PORT=8082
       - DUBBO_PROTOCOL_PORT=20885
       - DUBBO_REGISTER_MODE=instance
@@ -266,6 +273,7 @@ services:
       - SPRING_APPLICATION_NAME=dubbo-produce-7
       - NACOS_HOST=nacos-server
       - AGENT_HOST=dubbo-agent
+      - DUBBO_REGISTER_MODE=instance
       - AGENT_PORT=8082
       - DUBBO_PROTOCOL_PORT=20886
       - DUBBO_REGISTER_MODE=instance
@@ -299,6 +307,7 @@ services:
       - SPRING_APPLICATION_NAME=dubbo-produce-8
       - NACOS_HOST=nacos-server
       - AGENT_HOST=dubbo-agent
+      - DUBBO_REGISTER_MODE=instance
       - AGENT_PORT=8082
       - DUBBO_PROTOCOL_PORT=20887
       - DUBBO_REGISTER_MODE=instance
@@ -332,6 +341,7 @@ services:
       - SPRING_APPLICATION_NAME=dubbo-produce-9
       - NACOS_HOST=nacos-server
       - AGENT_HOST=dubbo-agent
+      - DUBBO_REGISTER_MODE=instance
       - AGENT_PORT=8082
       - DUBBO_PROTOCOL_PORT=20888
       - DUBBO_REGISTER_MODE=instance
@@ -365,6 +375,7 @@ services:
       - SPRING_APPLICATION_NAME=dubbo-produce-10
       - NACOS_HOST=nacos-server
       - AGENT_HOST=dubbo-agent
+      - DUBBO_REGISTER_MODE=instance
       - AGENT_PORT=8082
       - DUBBO_PROTOCOL_PORT=20889
       - DUBBO_REGISTER_MODE=instance

@@ -25,28 +25,52 @@ import java.util.*;
 public class SimpleDubboScanner implements CommandLineRunner {
 
     private static final String RESOURCE_PATTERN = "**/*.class";
+    private static final String TEST_MODEL_CONSUMER = "consumer";
+    private static final String TEST_MODEL_PROVIDER = "provider";
+    private static final String TEST_MODEL_ALL = "ALL";
 
     @Autowired
     private ApplicationContext applicationContext;
 
     private final Map<Class<?>, List<Method>> interfaceMethods = new HashMap<>();
     private EnableDubboTest enableDubboTest;
+    // 新增：标记是否需要执行扫描（consumer/ALL=true，provider=false）
+    private boolean needScan = false;
 
     @PostConstruct
     public void init() throws ClassNotFoundException {
+        // 1. 先尝试获取主类上的EnableDubboTest注解
         boolean hasAnnotation = isAnnotationPresentOnMainClass(EnableDubboTest.class);
         if (hasAnnotation) {
             String mainClassName = getMainClassName();
             Class<?> mainClass = Class.forName(mainClassName);
             this.enableDubboTest = mainClass.getAnnotation(EnableDubboTest.class);
+
+            // 2. 核心逻辑：根据testModel判断是否需要扫描
+            if (this.enableDubboTest != null) {
+                String testModel = this.enableDubboTest.testModel();
+                // 统一转大写，避免大小写问题
+                String upperTestModel = (testModel == null ? "" : testModel.trim().toUpperCase());
+                // consumer/ALL需要扫描，provider不需要
+                this.needScan = TEST_MODEL_CONSUMER.toUpperCase().equals(upperTestModel)
+                        || TEST_MODEL_ALL.toUpperCase().equals(upperTestModel);
+
+                log.info("✅ @EnableDubboTest testModel: {}, needScan: {}", testModel, this.needScan);
+            } else {
+                this.needScan = false;
+            }
         } else {
             this.enableDubboTest = null;
+            this.needScan = false;
+            log.warn("❌ 主类未找到@EnableDubboTest注解，跳过扫描");
         }
     }
 
     @Override
     public void run(String... args) throws Exception {
-        if (enableDubboTest == null) {
+        // 核心修改：仅当needScan=true时才执行扫描（consumer/ALL）
+        if (!needScan) {
+            log.info("📌 testModel为provider/无注解，跳过Dubbo扫描");
             return;
         }
 
@@ -80,6 +104,7 @@ public class SimpleDubboScanner implements CommandLineRunner {
                 }
 
             } catch (Exception e) {
+                log.warn("Verify package accessibility fail: {}", packageName, e);
             }
         }
     }
@@ -117,7 +142,6 @@ public class SimpleDubboScanner implements CommandLineRunner {
 
     private boolean isAnnotationPresentOnMainClass(Class<?> annotationClass) {
         try {
-
             String mainClassName = getMainClassName();
             Class<?> mainClass = Class.forName(mainClassName);
             Annotation[] annotations = mainClass.getAnnotations();
@@ -125,18 +149,19 @@ public class SimpleDubboScanner implements CommandLineRunner {
                 log.info("  - annotations: {}", annotation.annotationType().getSimpleName());
             }
             boolean hasAnnotation = mainClass.isAnnotationPresent((Class<? extends Annotation>) annotationClass);
-            log.info("@EnableDubboTest result: {}", hasAnnotation);
+            log.info("@EnableDubboTest exist: {}", hasAnnotation);
 
             if (hasAnnotation) {
                 EnableDubboTest enableDubboTest = mainClass.getAnnotation(EnableDubboTest.class);
-                log.info("✅find  @EnableDubboTest annotation: {}", enableDubboTest);
+                log.info("✅ find @EnableDubboTest annotation: {}", enableDubboTest);
             } else {
-                log.warn("❌ satrtcalsss {} not find  @EnableDubboTest annotation", mainClass.getName());
+                log.warn("❌ start class {} not find @EnableDubboTest annotation", mainClass.getName());
             }
 
             return hasAnnotation;
 
         } catch (Exception e) {
+            log.error("Check annotation fail", e);
             return false;
         }
     }
@@ -151,12 +176,12 @@ public class SimpleDubboScanner implements CommandLineRunner {
             String basePackage = mainClass.getPackage().getName();
             return new String[]{basePackage};
         } catch (Exception e) {
+            log.warn("Get base packages fail, use default: com.dubbo.dlt", e);
         }
         return new String[]{"com.dubbo.dlt"};
     }
 
     private void scanPackage(String basePackage) throws Exception {
-
         String packageSearchPath = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX +
                 ClassUtils.convertClassNameToResourcePath(basePackage) + "/" + RESOURCE_PATTERN;
 
@@ -187,10 +212,12 @@ public class SimpleDubboScanner implements CommandLineRunner {
                     }
                 }
             } catch (Exception e) {
-                log.warn("扫描类失败: {} - {}", resource.getFilename(), e.getMessage());
+                log.warn("Scan Class fail: {} - {}", resource.getFilename(), e.getMessage());
             }
         }
 
+        log.info("📊 Scan package {} complete: classCount={}, interfaceCount={}, methodCount={}",
+                basePackage, classCount, interfaceCount, methodCount);
     }
 
     private int scanInterfaceMethods(Class<?> interfaceClass) {
@@ -209,7 +236,7 @@ public class SimpleDubboScanner implements CommandLineRunner {
             interfaceMethods.put(interfaceClass, annotatedMethods);
 
             if (interfaceClass.getName().contains("dubbo.common")) {
-                log.info("✅ find . from dubbo-common annotation: {}", interfaceClass.getName());
+                log.info("✅ find annotated method from dubbo-common: {}", interfaceClass.getName());
             }
         }
 
@@ -218,28 +245,22 @@ public class SimpleDubboScanner implements CommandLineRunner {
 
     private void printScanResults() {
         if (interfaceMethods.isEmpty()) {
+            log.info("📌 No annotated methods found in scanned interfaces");
             return;
         }
 
         long commonInterfaceCount = interfaceMethods.keySet().stream()
                 .filter(cls -> cls.getName().contains("dubbo.common"))
                 .count();
-        long consumerInterfaceCount = interfaceMethods.size() - commonInterfaceCount;
+
+        log.info("📊 Final scan result: total interface={}, common interface={}, total method={}",
+                interfaceMethods.size(), commonInterfaceCount,
+                interfaceMethods.values().stream().mapToInt(List::size).sum());
+
         interfaceMethods.forEach((interfaceClass, methods) -> {
+            log.info("🔍 Interface: {} - annotated methods: {}",
+                    interfaceClass.getName(), methods.size());
         });
-    }
-
-    public Set<Class<?>> getAllInterfaces() {
-        return interfaceMethods.keySet();
-    }
-    public List<Method> getInterfaceMethods(Class<?> interfaceClass) {
-        return interfaceMethods.getOrDefault(interfaceClass, Collections.emptyList());
-    }
-
-    public List<Method> getAllMethods() {
-        List<Method> allMethods = new ArrayList<>();
-        interfaceMethods.values().forEach(allMethods::addAll);
-        return allMethods;
     }
 
     public List<Method> findAllMethodsByAnnotationValue(String annotationValue) {
@@ -255,13 +276,14 @@ public class SimpleDubboScanner implements CommandLineRunner {
         for (List<Method> methods : interfaceMethods.values()) {
             for (Method method : methods) {
                 DubboInvokeStat annotation = method.getAnnotation(DubboInvokeStat.class);
-                if (annotation != null && annotationValue.equals(annotation.value())) {
+                if (annotation != null && annotationValue.equals(annotation.namespace())) {
                     result.add(method);
                     foundCount++;
                 }
             }
         }
 
+        log.info("🔍 Find {} methods with annotation namespace: {}", foundCount, annotationValue);
         return result;
     }
 }
