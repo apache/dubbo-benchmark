@@ -10,11 +10,27 @@ https://img.shields.io/badge/build-passing-brightgreen
 
 #### 方式一:docker部署:
 
-先执行命令: `chmod +x dubbo.dt.sh`
+##### 先执行命令: 
 
-###### **可以直接回车全部默认，如果需要可以按照要求改参数**
+```
+chmod +x dubbo-dt.sh
+```
 
-##### 可以配置的参数：
+##### **执行命令**
+
+```bash
+./dubbo-dt.sh
+```
+
+##### 最后执行: 
+
+```
+docker compose up -d
+```
+
+#### (可选)配置参数：
+
+##### **可以直接回车全部默认，如果需要可以按照要求改参数**
 
 | 输入的参数/input parameters                                  | 默认           |
 | ------------------------------------------------------------ | :------------- |
@@ -27,15 +43,7 @@ https://img.shields.io/badge/build-passing-brightgreen
 | Agent Namespace / agent的命名空间(consumer和provide按照这个名字连接 / "consumer" and "provide" are connected according to this name) | dubbo-agent    |
 | Enter number of Dubbo Produces (default: 10) / 输入Produce数量 | 10             |
 
-##### 最后执行: 
-
-```
-docker compose up -d
-```
-
-
-
-###### 结果：会直接生成在当前目录生成文件包括
+#### (可选)文件结果: 会直接生成在当前目录生成文件包括
 
 | 文件名称                                      | 文件解释                                                     |
 | --------------------------------------------- | ------------------------------------------------------------ |

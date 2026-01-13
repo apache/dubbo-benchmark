@@ -1,57 +1,56 @@
 
 
-# Dubbo Test Tool
+# Dubbo Testing Tool
 
 https://img.shields.io/badge/build-passing-brightgreen
 
-This project focuses on testing the performance of the **Apache Dubbo** framework.
- By leveraging **Docker-based containerization**, it enables developers to quickly evaluate the real-world behavior of different **load balancing algorithms** in Dubbo.
+This project focuses on testing the performance of the Dubbo framework. Using Docker containerization technology, it helps developers quickly test the actual usage of load balancing algorithms in their projects.
 
-------
+## How to Run Tests
 
-## How to Run the Tests
+#### Method 1: Docker Deployment:
 
-### Option 1: Run with Docker
-
-First, grant execution permission to the script:
+##### First execute the command:
 
 ```
-chmod +x dubbo.dt.sh
+chmod +x dubbo-dt.sh
 ```
 
-###### You can simply press Enter to accept the default settings. If you need to make changes, you can modify the parameters as per the requirements.
+##### **Execute the command**
 
-#### Configurable Parameters
+```
+./dubbo-dt.sh
+```
 
-| Input Parameters                                             | Default        |
-| ------------------------------------------------------------ | -------------- |
-| Enter number of Dubbo Consumers (default: 1)                 | 1              |
-| Enter Agent load balancing strategy                          | ConsistentHash |
-| Enter Agent total test mode (FIXED_COUNT: fixed number of requests / DURATION: run by duration) | FIXED_COUNT    |
-| Enter Agent test duration in seconds                         | 100 seconds    |
-| Enter Agent total test requests                              | 100            |
-| Enter Agent serialization method                             | hessian2       |
-| Agent Namespace (consumer and provider are connected by this name) | dubbo-agent    |
-| Enter number of Dubbo Providers (default: 10)                | 10             |
-
-#### Finally, start the service:
+##### Finally execute:
 
 ```
 docker compose up -d
 ```
 
-------
+#### (Optional) Configuration Parameters:
 
+##### **You can press Enter to accept all defaults, or modify parameters as needed**
 
+| Input Parameters                                             | Default        |
+| :----------------------------------------------------------- | :------------- |
+| Enter number of Dubbo Consumers                              | 1              |
+| Enter Agent load balancing strategy                          | ConsistentHash |
+| Enter Agent total test mode (FIXED_COUNT: Fixed Count Mode / DURATION: Duration Mode) | FIXED_COUNT    |
+| Enter Agent test duration in seconds                         | 100 seconds    |
+| Enter Agent total test requests                              | 100 requests   |
+| Enter Agent serialization method                             | hessian2       |
+| Agent Namespace (used for connecting "consumer" and "provider") | dubbo-agent    |
+| Enter number of Dubbo Producers                              | 10             |
 
-### Results: Files will be directly generated in the current directory, including:
+#### (Optional) Output Files: Will be generated in the current directory
 
-|                   File Name                   |                       File Explanation                       |
-| :-------------------------------------------: | :----------------------------------------------------------: |
-| fixed_count-consumer-dubbo-consumerCN/EN.html | Consumer test results. Naming rule: TestMethod-TestRole(consumer/provide)-Name_CN/EN.html |
-|          consumer_resultsayHello.txt          | Test results in JSON format. Naming rule: TestRole-result-MethodName |
-|      provide_ressultprovider_1CN/EN.html      |   Provider data. Naming rule: provider-result-TestRoleName   |
-|         provide_resultprovider_1.txt          | Test results in JSON format. Naming rule: provider-result-TestRoleName |
+| File Name                                     | Description                                                  |
+| :-------------------------------------------- | :----------------------------------------------------------- |
+| fixed_count-consumer-dubbo-consumerCN/EN.html | Consumer results. Naming convention: test_method-tester(consumer or provider)-name_CN/EN.html |
+| consumer_resultsayHello.txt                   | Test results in JSON format. Naming convention: tester-result-method_name |
+| provide_resultprovider_1CN/EN.html            | Provider data. Naming convention: provider-result-tester_name |
+| provide_resultprovider_1.txt                  | Test results in JSON format. Naming convention: provider-result-tester_name |
 
 
 
