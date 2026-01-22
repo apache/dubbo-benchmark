@@ -1,4 +1,3 @@
-
 FROM maven:3.8.4-jdk-8 AS builder
 
 ENV TZ=Asia/Shanghai
@@ -22,10 +21,9 @@ RUN pwd && ls -la && \
         for jar in $(find target -name "dubbo-provider*.jar" ! -name "original*" -type f); do \
             jar tf "$jar" | grep -E "(MANIFEST.MF|Main-Class)" | head -3; \
         done; \
-    else \
     fi
 
-FROM eclipse-temurin:8-jre
+FROM eclipse-temurin:8-jdk
 
 ENV TZ=Asia/Shanghai
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
@@ -40,11 +38,9 @@ RUN ls -lh /app/ && \
         if jar tf app.jar | grep -q "MANIFEST.MF"; then \
             jar xf app.jar META-INF/MANIFEST.MF 2>/dev/null && \
             if grep -qi "main-class" META-INF/MANIFEST.MF; then \
-            else \
+                true; \
             fi; \
-        else \
         fi; \
-    else \
     fi
 
 EXPOSE 8080 20880

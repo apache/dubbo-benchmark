@@ -27,14 +27,24 @@ public class DubboTestImportSelector implements ImportSelector {
         if (!StringUtils.hasText(testModel)) {
             testModel = TEST_MODEL_ALL;
         }
-        return switch (testModel) {
-            case TEST_MODEL_CONSUMER -> new String[]{NettyConsumer.class.getName()};
-            case TEST_MODEL_PROVIDER -> new String[]{NettyProvider.class.getName()};
-            case TEST_MODEL_ALL -> new String[]{
-                    NettyConsumer.class.getName(),
-                    NettyProvider.class.getName()
-            };
-            default -> new String[0];
-        };
+        String[] imports;
+        switch (testModel) {
+            case TEST_MODEL_CONSUMER:
+                imports = new String[]{NettyConsumer.class.getName()};
+                break;
+            case TEST_MODEL_PROVIDER:
+                imports = new String[]{NettyProvider.class.getName()};
+                break;
+            case TEST_MODEL_ALL:
+                imports = new String[]{
+                        NettyConsumer.class.getName(),
+                        NettyProvider.class.getName()
+                };
+                break;
+            default:
+                imports = new String[0];
+                break;
+        }
+        return imports;
     }
 }

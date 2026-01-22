@@ -1,160 +1,158 @@
-# Dubbo Testing Tool
+
+
+# Dubbo Test Tool
 
 https://img.shields.io/badge/build-passing-brightgreen
 
-This project focuses on testing the performance of the Dubbo framework. Using Docker containerization technology, it helps developers quickly test the actual usage of load balancing algorithms in their projects.
+This project focuses on testing the performance of the **Apache Dubbo** framework.
+ By leveraging **Docker-based containerization**, it enables developers to quickly evaluate the real-world behavior of different **load balancing algorithms** in Dubbo.
 
-## How to Run Tests
+------
 
-#### Method 1: Docker Deployment
+## How to Run the Tests
 
-##### First, execute the command:
+### Option 1: Run with Docker
 
-text
-
-```
-cd dubbo-dt.sh
-```
-
-**Then execute:**
+First, grant execution permission to the script:
 
 ```
-chmod +x dubbo-dt.sh
+chmod +x dubbo.dt.sh
 ```
 
-##### **Execute command**
+###### You can simply press Enter to accept the default settings. If you need to make changes, you can modify the parameters as per the requirements.
 
-```
-./dubbo-dt.sh
-```
+#### Configurable Parameters
 
-##### Finally, execute:
+| Input Parameters                                             | Default        |
+| ------------------------------------------------------------ | -------------- |
+| Enter number of Dubbo Consumers (default: 1)                 | 1              |
+| Enter Agent load balancing strategy                          | ConsistentHash |
+| Enter Agent total test mode (FIXED_COUNT: fixed number of requests / DURATION: run by duration) | FIXED_COUNT    |
+| Enter Agent test duration in seconds                         | 100 seconds    |
+| Enter Agent total test requests                              | 100            |
+| Enter Agent serialization method                             | hessian2       |
+| Agent Namespace (consumer and provider are connected by this name) | dubbo-agent    |
+| Enter number of Dubbo Providers (default: 10)                | 10             |
+
+#### Finally, start the service:
 
 ```
 docker compose up -d
 ```
 
-
-
-#### (Optional) Configuration Parameters:
-
-##### **You can press Enter to accept all defaults, or modify parameters as needed.**
-
-| Input Parameter / Description                          | Default        |
-| :----------------------------------------------------- | :------------- |
-| Enter number of Dubbo Consumers (default: 1)           | 1              |
-| Enter Agent load balancing strategy                    | ConsistentHash |
-| Enter Agent total test mode (FIXED_COUNT / DURATION)   | FIXED_COUNT    |
-| Enter Agent test duration in seconds                   | 100 seconds    |
-| Enter Agent total test requests                        | 100 requests   |
-| Enter Agent serialization method                       | hessian2       |
-| Agent Namespace (for connecting consumer and provider) | dubbo-agent    |
-| Enter number of Dubbo Providers (default: 10)          | 10             |
-
-#### (Optional) Result Files: Generated in the current directory
-
-| File Name                                     | Description                                                  |
-| :-------------------------------------------- | :----------------------------------------------------------- |
-| fixed_count-consumer-dubbo-consumerCN/EN.html | Consumer results. Naming convention: testMethod-tester(consumer/provider)-name_CN/EN.html |
-| consumer_resultsayHello.txt                   | Test results in JSON format. Naming: tester-result-methodName |
-| provide_resultprovider_1CN/EN.html            | Provider data. Naming: provider-result-testerName            |
-| provide_resultprovider_1.txt                  | Test results in JSON format. Naming: provider-result-testerName |
-
-#### Method 2: Local Deployment (requires some Dubbo experience):
-
-###### Clone this project locally
-
-**1. First, configure the agent parameters**
-
-| Parameter Name          | Meaning                   | Required?                  |
-| :---------------------- | :------------------------ | :------------------------- |
-| SPRING_APPLICATION_NAME | Agent name                | Yes                        |
-| SERVICE_PORT            | Agent port                | Yes                        |
-| AGENT_DURATION_SECONDS  | Agent test execution time | No (default: 100)          |
-| AGENT_REQUEST_COUNT     | Number of agent requests  | No (default: 100)          |
-| AGENT_LOADBALANCE       | Load balancing strategy   | Yes (default: random)      |
-| AGENT_SERIALIZATION     | Serialization method      | Yes (default: hessian2)    |
-| AGENT_TEST_MODE         | Testing mode              | Yes (default: FIXED_COUNT) |
-
-Example: `java -DSPRING_APPLICATION_NAME=dubbo-agent -DSERVICE_PORT=8802 -jar`
-
-##### 2. How to configure your own test methods
-
-##### Consumer Configuration
-
-**First, add the annotation to the Consumer's startup class:**
-
-java
-
-```java
-@SpringBootApplication(scanBasePackages = {"com.dubbo.common","com.dubbo.consumer"})
-@EnableDubbo
-@EnableDubboTest(basePackages = {"com.dubbo.consumer", "com.dubbo.common"}, testModel = "consumer")
-public class ConsumerApplication {
-    public static void main(String[] args) {
-        ConfigurableApplicationContext context = 
-            SpringApplication.run(ConsumerApplication.class, args);
-    }
-}
-```
+------
 
 
 
-**@EnableDubboTest**
+### Results: Files will be directly generated in the current directory, including:
 
-> **basePackages**: API package path
-> **testModel**: Write "consumer" if current test mode is consumer; omit if both consumer and provider
+|                   File Name                   |                       File Explanation                       |
+| :-------------------------------------------: | :----------------------------------------------------------: |
+| fixed_count-consumer-dubbo-consumerCN/EN.html | Consumer test results. Naming rule: TestMethod-TestRole(consumer/provide)-Name_CN/EN.html |
+|          consumer_resultsayHello.txt          | Test results in JSON format. Naming rule: TestRole-result-MethodName |
+|      provide_ressultprovider_1CN/EN.html      |   Provider data. Naming rule: provider-result-TestRoleName   |
+|         provide_resultprovider_1.txt          | Test results in JSON format. Naming rule: provider-result-TestRoleName |
 
-**Add annotation to the API method being tested:**
 
-java
+
+### Option 2: Run Locally
+
+#### Clone this project to your local machine
+
+### 1. Configure Agent Parameters
+
+| Parameter Name          | Description             | Required                   |
+| ----------------------- | ----------------------- | -------------------------- |
+| SPRING_APPLICATION_NAME | Agent application name  | Yes                        |
+| SERVICE_PORT            | Agent service port      | Yes                        |
+| AGENT_DURATION_SECONDS  | Test execution duration | No (default: 100)          |
+| AGENT_REQUEST_COUNT     | Total request count     | No (default: 100)          |
+| AGENT_LOADBALANCE       | Load balancing strategy | Yes (default: random)      |
+| AGENT_SERIALIZATION     | Serialization method    | Yes (default: hessian2)    |
+| AGENT_TEST_MODE         | Test mode               | Yes (default: FIXED_COUNT) |
+
+Example:
 
 ```
- @DubboInvokeStat(namespace = "agentname", argKey = "AGENT_NAME_HELLO", argValue = DubboInvokeEnum.class) 
+java -DSPRING_APPLICATION_NAME=dubbo-agent \
+     -DSERVICE_PORT=8802 \
+     -jar your-agent.jar
 ```
 
+------
 
+## 2. How to Configure Your Own Test Logic
 
-**@DubboInvokeStat**
+### Consumer Configuration
 
-> **namespace**: Name of the agent for this test
-> **argKey**: Name of the key corresponding to your enum
-> **argValue**: Corresponding test data enum
+#### Step 1: Add annotation to the Consumer application
 
-##### Mock Data Enum Class (where your test data is written)
+```
+@EnableDubboTest(
+    basePackages = {"com.dubbo.consumer", "com.dubbo.common"},
+    testModel = "consumer"
+)
+```
 
-###### Important: key is the name of mock data to test, value contains the corresponding values
+- **basePackages**: package paths of APIs
+- **testModel**: set to `consumer` if this application is a consumer
+   (omit if the application is both consumer and provider)
 
-java
+------
 
-```java
+#### Step 2: Add annotation to the abstract API
+
+```
+@DubboInvokeStat(
+    namespace = "agentname",
+    argKey = "AGENT_NAME_HELLO",
+    argValue = DubboInvokeEnum.class
+)
+```
+
+- **namespace**: agent name used for this test
+- **argKey**: key name defined in the enum
+- **argValue**: enum class containing mock request data
+
+------
+
+### Mock Data Enum (Test Data Definition)
+
+> **Important:**
+>  The enum **key** represents the mock data identifier,
+>  and the **value** represents the actual request object.
+
+```
 package com.dubbo.common.constant;
+
 import com.alibaba.fastjson2.JSON;
 
-public enum DubboInvokeEnum  {
+public enum DubboInvokeEnum {
+
     AGENT_NAME_HELLO(new DubboTest("Hello")),
-    AGENT_NAME_HELLO2(new DubboTest("Hello2")),
+    AGENT_NAME_HELLO2(new DubboTest("Hello 2")),
     AGENT_OTHER(new DubboTest("Extended Test"));
-    
+
     private Object value;
 
     DubboInvokeEnum(Object reqObj) {
         this.value = reqObj;
     }
-    
+
     public Object getValue() {
         return value;
     }
 }
 ```
 
+------
 
+### DubboTest (Request Parameter Definition)
 
-##### DubboTest (Parameters required for test data)
+> **Requirement:**
+>  The field name must match the name of the method parameter being invoked.
 
-###### Requirement: These parameters must match the method name being called
-
-```java
+```
 package com.dubbo.common.constant;
 
 import lombok.AllArgsConstructor;
@@ -167,19 +165,19 @@ public class DubboTest<T> {
 }
 ```
 
+------
 
+### Provider Configuration
 
-##### Provider Configuration
+#### Step 1: Add annotation to the Provider application
 
-- ###### First, add the annotation to the Provider being tested:
-
-```java
-@EnableDubboTest(basePackages = {"com.dubbo.consumer", "com.dubbo.common"}, testModel = "provider")
+```
+@EnableDubboTest(
+    basePackages = {"com.dubbo.consumer", "com.dubbo.common"},
+    testModel = "provider"
+)
 ```
 
-
-
-**@EnableDubboTest**
-
-> **basePackages**: API package path
-> **testModel**: Write "provider" if current test mode is provider; omit if both consumer and provider
+- **basePackages**: package paths of APIs
+- **testModel**: set to `provider` if this application is a provider
+   (omit if the application is both consumer and provider)

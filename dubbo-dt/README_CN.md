@@ -10,33 +10,17 @@ https://img.shields.io/badge/build-passing-brightgreen
 
 #### 方式一:docker部署:
 
-##### 先执行命令: 
+**先执行命令:** `cd dubbo-dt`
 
-```
-cd dubbo-dt.sh
-```
+**然后执行**:`chmod +x dubbo.dt.sh`
 
-**然后执行:**
+**最后执行:** `docker compose up -d`
 
-```
-chmod +x dubbo-dt.sh
-```
 
-##### **执行命令**
 
-```bash
-./dubbo-dt.sh
-```
+###### **可以直接回车全部默认，如果需要可以按照要求改参数**
 
-##### 最后执行: 
-
-```
-docker compose up -d
-```
-
-#### (可选)配置参数：
-
-##### **可以直接回车全部默认，如果需要可以按照要求改参数**
+##### 可以配置的参数：
 
 | 输入的参数/input parameters                                  | 默认           |
 | ------------------------------------------------------------ | :------------- |
@@ -49,7 +33,9 @@ docker compose up -d
 | Agent Namespace / agent的命名空间(consumer和provide按照这个名字连接 / "consumer" and "provide" are connected according to this name) | dubbo-agent    |
 | Enter number of Dubbo Produces (default: 10) / 输入Produce数量 | 10             |
 
-#### (可选)文件结果: 会直接生成在当前目录生成文件包括
+
+
+###### 结果：会直接生成在当前目录生成文件包括
 
 | 文件名称                                      | 文件解释                                                     |
 | --------------------------------------------- | ------------------------------------------------------------ |
@@ -60,7 +46,9 @@ docker compose up -d
 
 
 
-#### 方式二:本地部署(有一定dubbo使用经验):
+
+
+#### 方式二:本地部署:
 
 ###### 克隆本项目到本地
 
@@ -83,38 +71,26 @@ docker compose up -d
 
 ##### Consumer 端配置
 
-**首先在需要测试的 Consumer 的启动类上添加注解：**
+- ###### 首先在需要测试的 Consumer 上添加注解：
 
 ```java
-@SpringBootApplication(scanBasePackages = {"com.dubbo.common","com.dubbo.consumer"})
-@EnableDubbo
 @EnableDubboTest(basePackages = {"com.dubbo.consumer", "com.dubbo.common"}, testModel = "consumer")
-public class ConsumerApplication {
-    public static void main(String[] args) {
-        ConfigurableApplicationContext context = 
-            SpringApplication.run(ConsumerApplication.class, args);
-    }
-}
 ```
 
-**@EnableDubboTest**
+​	**basePackages**: api的包路径
 
-> **basePackages**: api的包路径
->
-> **testModel**: 当前的测试模式是consumer就写consumer，如果即是consumer也是provide就不用写
+​	**testModel**: 当前的测试模式是consumer就写consumer，如果即是consumer也是provide就不用写
 
-**在测试方法上 API 上添加注解：**
+- 在抽象 API 上添加注解：
 
 ```java
  @DubboInvokeStat(namespace = "agentname",  argKey = "AGENT_NAME_HELLO" ,argValue= DubboInvokeEnum.class) 
 ```
-**@DubboInvokeStat**
+**namespace** : 这次测试的agent名称
 
-> **namespace** : 这次测试的agent名称
->
-> **argKey** : 你枚举对于的key的名称
->
-> **argValue** : 对应的测试数据枚举
+**argKey** : 你枚举对于的key的名称
+
+**argValue** : 对应的测试数据枚举
 
 ##### Mock数据枚举类（你测试数据写的地方）
 ###### 重点：key是要测试的mock数据名称，里面是对应的值
@@ -160,8 +136,6 @@ public class DubboTest<T> {
 @EnableDubboTest(basePackages = {"com.dubbo.consumer", "com.dubbo.common"}, testModel = "provider")
 ```
 
-**@EnableDubboTest**	
+​	**basePackages**: api的包路径
 
-> **basePackages**: api的包路径
->
-> **testModel**: 当前的测试模式是provider就写provider，如果即是consumer也是provide就不用写
+​	**testModel**: 当前的测试模式是provider就写provider，如果即是consumer也是provide就不用写
