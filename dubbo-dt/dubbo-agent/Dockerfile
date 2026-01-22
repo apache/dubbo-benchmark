@@ -38,4 +38,4 @@ RUN echo "=== 验证文件结构 ===" && \
 
 EXPOSE 8082
 
-ENTRYPOINT ["java", "-cp", "app.jar:lib/*", "com.dubbo.dlt.AgentApplication"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
