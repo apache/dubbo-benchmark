@@ -38,6 +38,7 @@
         <module>dubbo-hessianlite-client</module>
         <module>dubbo-hessianlite-server</module>
         <module>dubbo-fst-client</module>
+        <module>dubbo-dt</module>
         <module>dubbo-fst-server</module>
         <module>dubbo-native-hessian-client</module>
         <module>dubbo-native-hessian-server</module>

@@ -1,0 +1,478 @@
+version: '3.8'
+
+services:
+  nacos:
+    image: nacos/nacos-server:v2.5.2
+    container_name: nacos-server
+    environment:
+      - PREFER_HOST_MODE=hostname
+      - MODE=standalone
+      - SPRING_DATASOURCE_PLATFORM=
+      - NACOS_AUTH_ENABLE=false
+      - NACOS_JVM_XMS=512m
+      - NACOS_JVM_XMX=512m
+      - NACOS_JVM_XMN=256m
+    ports:
+      - "8848:8848"
+    volumes:
+      - nacos_data:/home/nacos/data
+      - nacos_logs:/home/nacos/logs
+    networks:
+      - dubbo-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8848/nacos/v1/console/health/readiness"]
+      interval: 20s
+      timeout: 10s
+      retries: 20
+      start_period: 90s
+
+  dubbo-agent:
+    build:
+      context: .
+      dockerfile: ./dubbo-agent/Dockerfile
+    container_name: dubbo-agent
+    environment:
+      - SERVER_PORT=8082
+      - SPRING_APPLICATION_NAME=dubbo-agent
+      - NACOS_HOST=nacos-server
+      - AGENT_LOADBALANCE=ConsistentHash
+      - AGENT_DURATION_SECONDS=100
+      - AGENT_REQUEST_COUNT=100
+      - AGENT_SERIALIZATION=hessian2
+      - TEST_DEFAULT_TIMEOUT_SECONDS=300
+      - AGENT_TEST_MODE=FIXED_COUNT
+      - TEST_MAX_CONCURRENT_TESTS=10
+      - JAVA_OPTS=-Xmx512m -Xms256m -XX:+UseG1GC -Dfile.encoding=UTF-8
+      - DUBBO_REGISTRY_RETRY_TIMES=15
+      - DUBBO_REGISTRY_RECONNECT_PERIOD=5000
+      - DUBBO_SHUTDOWN_WAIT_SECONDS=60
+    ports:
+      - "8082:8082"
+    volumes:
+      - ./logs/agent:/app/logs
+      - .:/app
+    depends_on:
+      nacos:
+        condition: service_healthy
+    networks:
+      - dubbo-network
+    restart: unless-stopped
+
+  dubbo-produce:
+    build:
+      context: .
+      dockerfile: ./dubbo-produce/Dockerfile
+    container_name: dubbo-produce
+    environment:
+      - SERVICE_PORT=8080
+      - SPRING_APPLICATION_NAME=dubbo-produce
+      - NACOS_HOST=nacos-server
+      - AGENT_HOST=dubbo-agent
+      - DUBBO_REGISTER_MODE=instance
+      - AGENT_PORT=8082
+      - DUBBO_PROTOCOL_PORT=20880
+      - DUBBO_REGISTER_MODE=instance
+      - DUBBO_PROTOCOL_NAME=dubbo
+      - DUBBO_LOADBALANCE=leastactive
+      - JAVA_OPTS=-Xmx512m -Xms256m -XX:+UseG1GC -Dfile.encoding=UTF-8
+      - DUBBO_REGISTRY_RETRY_TIMES=20
+      - DUBBO_REGISTRY_RECONNECT_PERIOD=8000
+      - DUBBO_SHUTDOWN_WAIT_SECONDS=60
+      - DUBBO_REGISTRY_CHECK=false
+    ports:
+      - "8080:8080"
+      - "20880:20880"
+    volumes:
+      - ./logs/produce:/app/logs
+      - dubbo-cache:/root/.dubbo
+    depends_on:
+      nacos:
+        condition: service_healthy
+    networks:
+      - dubbo-network
+    restart: unless-stopped
+
+  dubbo-produce-2:
+    build:
+      context: .
+      dockerfile: ./dubbo-produce/Dockerfile
+    container_name: dubbo-produce-2
+    environment:
+      - SERVICE_PORT=8081
+      - SPRING_APPLICATION_NAME=dubbo-produce-2
+      - NACOS_HOST=nacos-server
+      - AGENT_HOST=dubbo-agent
+      - DUBBO_REGISTER_MODE=instance
+      - AGENT_PORT=8082
+      - DUBBO_PROTOCOL_PORT=20881
+      - DUBBO_REGISTER_MODE=instance
+      - DUBBO_PROTOCOL_NAME=dubbo
+      - DUBBO_LOADBALANCE=leastactive
+      - JAVA_OPTS=-Xmx512m -Xms256m -XX:+UseG1GC -Dfile.encoding=UTF-8
+      - DUBBO_REGISTRY_RETRY_TIMES=20
+      - DUBBO_REGISTRY_RECONNECT_PERIOD=8000
+      - DUBBO_SHUTDOWN_WAIT_SECONDS=60
+      - DUBBO_REGISTRY_CHECK=false
+    ports:
+      - "8081:8081"
+      - "20881:20881"
+    volumes:
+      - ./logs/produce-2:/app/logs
+      - dubbo-cache:/root/.dubbo
+    depends_on:
+      nacos:
+        condition: service_healthy
+    networks:
+      - dubbo-network
+    restart: unless-stopped
+
+  dubbo-produce-3:
+    build:
+      context: .
+      dockerfile: ./dubbo-produce/Dockerfile
+    container_name: dubbo-produce-3
+    environment:
+      - SERVICE_PORT=8082
+      - SPRING_APPLICATION_NAME=dubbo-produce-3
+      - NACOS_HOST=nacos-server
+      - AGENT_HOST=dubbo-agent
+      - DUBBO_REGISTER_MODE=instance
+      - AGENT_PORT=8082
+      - DUBBO_PROTOCOL_PORT=20882
+      - DUBBO_REGISTER_MODE=instance
+      - DUBBO_PROTOCOL_NAME=dubbo
+      - DUBBO_LOADBALANCE=leastactive
+      - JAVA_OPTS=-Xmx512m -Xms256m -XX:+UseG1GC -Dfile.encoding=UTF-8
+      - DUBBO_REGISTRY_RETRY_TIMES=20
+      - DUBBO_REGISTRY_RECONNECT_PERIOD=8000
+      - DUBBO_SHUTDOWN_WAIT_SECONDS=60
+      - DUBBO_REGISTRY_CHECK=false
+    ports:
+      - "8082:8082"
+      - "20882:20882"
+    volumes:
+      - ./logs/produce-3:/app/logs
+      - dubbo-cache:/root/.dubbo
+    depends_on:
+      nacos:
+        condition: service_healthy
+    networks:
+      - dubbo-network
+    restart: unless-stopped
+
+  dubbo-produce-4:
+    build:
+      context: .
+      dockerfile: ./dubbo-produce/Dockerfile
+    container_name: dubbo-produce-4
+    environment:
+      - SERVICE_PORT=8083
+      - SPRING_APPLICATION_NAME=dubbo-produce-4
+      - NACOS_HOST=nacos-server
+      - AGENT_HOST=dubbo-agent
+      - DUBBO_REGISTER_MODE=instance
+      - AGENT_PORT=8082
+      - DUBBO_PROTOCOL_PORT=20883
+      - DUBBO_REGISTER_MODE=instance
+      - DUBBO_PROTOCOL_NAME=dubbo
+      - DUBBO_LOADBALANCE=leastactive
+      - JAVA_OPTS=-Xmx512m -Xms256m -XX:+UseG1GC -Dfile.encoding=UTF-8
+      - DUBBO_REGISTRY_RETRY_TIMES=20
+      - DUBBO_REGISTRY_RECONNECT_PERIOD=8000
+      - DUBBO_SHUTDOWN_WAIT_SECONDS=60
+      - DUBBO_REGISTRY_CHECK=false
+    ports:
+      - "8083:8083"
+      - "20883:20883"
+    volumes:
+      - ./logs/produce-4:/app/logs
+      - dubbo-cache:/root/.dubbo
+    depends_on:
+      nacos:
+        condition: service_healthy
+    networks:
+      - dubbo-network
+    restart: unless-stopped
+
+  dubbo-produce-5:
+    build:
+      context: .
+      dockerfile: ./dubbo-produce/Dockerfile
+    container_name: dubbo-produce-5
+    environment:
+      - SERVICE_PORT=8084
+      - SPRING_APPLICATION_NAME=dubbo-produce-5
+      - NACOS_HOST=nacos-server
+      - AGENT_HOST=dubbo-agent
+      - DUBBO_REGISTER_MODE=instance
+      - AGENT_PORT=8082
+      - DUBBO_PROTOCOL_PORT=20884
+      - DUBBO_REGISTER_MODE=instance
+      - DUBBO_PROTOCOL_NAME=dubbo
+      - DUBBO_LOADBALANCE=leastactive
+      - JAVA_OPTS=-Xmx512m -Xms256m -XX:+UseG1GC -Dfile.encoding=UTF-8
+      - DUBBO_REGISTRY_RETRY_TIMES=20
+      - DUBBO_REGISTRY_RECONNECT_PERIOD=8000
+      - DUBBO_SHUTDOWN_WAIT_SECONDS=60
+      - DUBBO_REGISTRY_CHECK=false
+    ports:
+      - "8084:8084"
+      - "20884:20884"
+    volumes:
+      - ./logs/produce-5:/app/logs
+      - dubbo-cache:/root/.dubbo
+    depends_on:
+      nacos:
+        condition: service_healthy
+    networks:
+      - dubbo-network
+    restart: unless-stopped
+
+  dubbo-produce-6:
+    build:
+      context: .
+      dockerfile: ./dubbo-produce/Dockerfile
+    container_name: dubbo-produce-6
+    environment:
+      - SERVICE_PORT=8085
+      - SPRING_APPLICATION_NAME=dubbo-produce-6
+      - NACOS_HOST=nacos-server
+      - AGENT_HOST=dubbo-agent
+      - DUBBO_REGISTER_MODE=instance
+      - AGENT_PORT=8082
+      - DUBBO_PROTOCOL_PORT=20885
+      - DUBBO_REGISTER_MODE=instance
+      - DUBBO_PROTOCOL_NAME=dubbo
+      - DUBBO_LOADBALANCE=leastactive
+      - JAVA_OPTS=-Xmx512m -Xms256m -XX:+UseG1GC -Dfile.encoding=UTF-8
+      - DUBBO_REGISTRY_RETRY_TIMES=20
+      - DUBBO_REGISTRY_RECONNECT_PERIOD=8000
+      - DUBBO_SHUTDOWN_WAIT_SECONDS=60
+      - DUBBO_REGISTRY_CHECK=false
+    ports:
+      - "8085:8085"
+      - "20885:20885"
+    volumes:
+      - ./logs/produce-6:/app/logs
+      - dubbo-cache:/root/.dubbo
+    depends_on:
+      nacos:
+        condition: service_healthy
+    networks:
+      - dubbo-network
+    restart: unless-stopped
+
+  dubbo-produce-7:
+    build:
+      context: .
+      dockerfile: ./dubbo-produce/Dockerfile
+    container_name: dubbo-produce-7
+    environment:
+      - SERVICE_PORT=8086
+      - SPRING_APPLICATION_NAME=dubbo-produce-7
+      - NACOS_HOST=nacos-server
+      - AGENT_HOST=dubbo-agent
+      - DUBBO_REGISTER_MODE=instance
+      - AGENT_PORT=8082
+      - DUBBO_PROTOCOL_PORT=20886
+      - DUBBO_REGISTER_MODE=instance
+      - DUBBO_PROTOCOL_NAME=dubbo
+      - DUBBO_LOADBALANCE=leastactive
+      - JAVA_OPTS=-Xmx512m -Xms256m -XX:+UseG1GC -Dfile.encoding=UTF-8
+      - DUBBO_REGISTRY_RETRY_TIMES=20
+      - DUBBO_REGISTRY_RECONNECT_PERIOD=8000
+      - DUBBO_SHUTDOWN_WAIT_SECONDS=60
+      - DUBBO_REGISTRY_CHECK=false
+    ports:
+      - "8086:8086"
+      - "20886:20886"
+    volumes:
+      - ./logs/produce-7:/app/logs
+      - dubbo-cache:/root/.dubbo
+    depends_on:
+      nacos:
+        condition: service_healthy
+    networks:
+      - dubbo-network
+    restart: unless-stopped
+
+  dubbo-produce-8:
+    build:
+      context: .
+      dockerfile: ./dubbo-produce/Dockerfile
+    container_name: dubbo-produce-8
+    environment:
+      - SERVICE_PORT=8087
+      - SPRING_APPLICATION_NAME=dubbo-produce-8
+      - NACOS_HOST=nacos-server
+      - AGENT_HOST=dubbo-agent
+      - DUBBO_REGISTER_MODE=instance
+      - AGENT_PORT=8082
+      - DUBBO_PROTOCOL_PORT=20887
+      - DUBBO_REGISTER_MODE=instance
+      - DUBBO_PROTOCOL_NAME=dubbo
+      - DUBBO_LOADBALANCE=leastactive
+      - JAVA_OPTS=-Xmx512m -Xms256m -XX:+UseG1GC -Dfile.encoding=UTF-8
+      - DUBBO_REGISTRY_RETRY_TIMES=20
+      - DUBBO_REGISTRY_RECONNECT_PERIOD=8000
+      - DUBBO_SHUTDOWN_WAIT_SECONDS=60
+      - DUBBO_REGISTRY_CHECK=false
+    ports:
+      - "8087:8087"
+      - "20887:20887"
+    volumes:
+      - ./logs/produce-8:/app/logs
+      - dubbo-cache:/root/.dubbo
+    depends_on:
+      nacos:
+        condition: service_healthy
+    networks:
+      - dubbo-network
+    restart: unless-stopped
+
+  dubbo-produce-9:
+    build:
+      context: .
+      dockerfile: ./dubbo-produce/Dockerfile
+    container_name: dubbo-produce-9
+    environment:
+      - SERVICE_PORT=8088
+      - SPRING_APPLICATION_NAME=dubbo-produce-9
+      - NACOS_HOST=nacos-server
+      - AGENT_HOST=dubbo-agent
+      - DUBBO_REGISTER_MODE=instance
+      - AGENT_PORT=8082
+      - DUBBO_PROTOCOL_PORT=20888
+      - DUBBO_REGISTER_MODE=instance
+      - DUBBO_PROTOCOL_NAME=dubbo
+      - DUBBO_LOADBALANCE=leastactive
+      - JAVA_OPTS=-Xmx512m -Xms256m -XX:+UseG1GC -Dfile.encoding=UTF-8
+      - DUBBO_REGISTRY_RETRY_TIMES=20
+      - DUBBO_REGISTRY_RECONNECT_PERIOD=8000
+      - DUBBO_SHUTDOWN_WAIT_SECONDS=60
+      - DUBBO_REGISTRY_CHECK=false
+    ports:
+      - "8088:8088"
+      - "20888:20888"
+    volumes:
+      - ./logs/produce-9:/app/logs
+      - dubbo-cache:/root/.dubbo
+    depends_on:
+      nacos:
+        condition: service_healthy
+    networks:
+      - dubbo-network
+    restart: unless-stopped
+
+  dubbo-produce-10:
+    build:
+      context: .
+      dockerfile: ./dubbo-produce/Dockerfile
+    container_name: dubbo-produce-10
+    environment:
+      - SERVICE_PORT=8089
+      - SPRING_APPLICATION_NAME=dubbo-produce-10
+      - NACOS_HOST=nacos-server
+      - AGENT_HOST=dubbo-agent
+      - DUBBO_REGISTER_MODE=instance
+      - AGENT_PORT=8082
+      - DUBBO_PROTOCOL_PORT=20889
+      - DUBBO_REGISTER_MODE=instance
+      - DUBBO_PROTOCOL_NAME=dubbo
+      - DUBBO_LOADBALANCE=leastactive
+      - JAVA_OPTS=-Xmx512m -Xms256m -XX:+UseG1GC -Dfile.encoding=UTF-8
+      - DUBBO_REGISTRY_RETRY_TIMES=20
+      - DUBBO_REGISTRY_RECONNECT_PERIOD=8000
+      - DUBBO_SHUTDOWN_WAIT_SECONDS=60
+      - DUBBO_REGISTRY_CHECK=false
+    ports:
+      - "8089:8089"
+      - "20889:20889"
+    volumes:
+      - ./logs/produce-10:/app/logs
+      - dubbo-cache:/root/.dubbo
+    depends_on:
+      nacos:
+        condition: service_healthy
+    networks:
+      - dubbo-network
+    restart: unless-stopped
+
+  dubbo-consumer:
+    build:
+      context: .
+      dockerfile: ./dubbo-consumer/Dockerfile
+    container_name: dubbo-consumer
+    environment:
+      - CONSUMER_PORT=8180
+      - SPRING_APPLICATION_NAME=dubbo-consumer
+      - AGENT_HOST=dubbo-agent
+      - AGENT_PORT=8082
+      - NACOS_HOST=nacos-server
+      - DUBBO_CONSUMER_LOADBALANCE=roundrobin
+      - DUBBO_QOS_ENABLE=false
+      - JAVA_OPTS=-Xmx512m -Xms256m -XX:+UseG1GC -Dfile.encoding=UTF-8
+      - DUBBO_REGISTRY_RETRY_TIMES=25
+      - DUBBO_REGISTRY_RECONNECT_PERIOD=10000
+      - DUBBO_SHUTDOWN_WAIT_SECONDS=60
+      - DUBBO_REGISTRY_CHECK=false
+      - DUBBO_WAIT_FOR_SERVICES_TIMEOUT=180000
+    ports:
+      - "8180:8180"
+    volumes:
+      - ./logs/consumer:/app/logs
+      - dubbo-cache:/root/.dubbo
+    depends_on:
+      nacos:
+        condition: service_healthy
+      dubbo-agent:
+        condition: service_started
+      dubbo-produce:
+        condition: service_started
+      dubbo-produce-2:
+        condition: service_started
+      dubbo-produce-3:
+        condition: service_started
+      dubbo-produce-4:
+        condition: service_started
+      dubbo-produce-5:
+        condition: service_started
+      dubbo-produce-6:
+        condition: service_started
+      dubbo-produce-7:
+        condition: service_started
+      dubbo-produce-8:
+        condition: service_started
+      dubbo-produce-9:
+        condition: service_started
+      dubbo-produce-10:
+        condition: service_started
+    networks:
+      - dubbo-network
+    restart: unless-stopped
+
+  dubbo-admin:
+    image: apache/dubbo-admin:0.5.0
+    container_name: dubbo-admin
+    environment:
+      - admin.registry.address=nacos://nacos-server:8848
+      - admin.config-center=nacos://nacos-server:8848
+      - admin.metadata-report.address=nacos://nacos-server:8848
+    ports:
+      - "8083:8080"
+    depends_on:
+      nacos:
+        condition: service_healthy
+    networks:
+      - dubbo-network
+    restart: unless-stopped
+
+networks:
+  dubbo-network:
+    driver: bridge
+
+volumes:
+  nacos_data:
+  nacos_logs:
+  dubbo-cache:
