@@ -1,0 +1,12 @@
+server:
+  port: ${CONSUMER_PORT:8081}
+spring:
+  application:
+    name: ${SPRING_APPLICATION_NAME:dubbo-consumer-2}
+dubbo:
+  registry:
+    address: nacos://${NACOS_HOST:192.168.1.5}:8848
+    discovery-mode: application
+  metadata-report:
+    address: nacos://${NACOS_HOST:192.168.1.5}:8848
+    cache-file: ./.dubbo/${spring.application.name}/consumer-metadata.cache

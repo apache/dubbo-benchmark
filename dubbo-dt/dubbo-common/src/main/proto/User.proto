@@ -1,0 +1,17 @@
+syntax = "proto3";
+package org.apache.dubbo.common.api;
+
+option java_package = "org.apache.dubbo.common.api";
+option java_multiple_files = true;
+
+message UserRequest {
+  string name = 1;
+}
+
+message UserResponse {
+  string greeting = 1;
+}
+service UserTestService {
+  rpc GetUser (UserRequest) returns (UserResponse) {
+    }
+}

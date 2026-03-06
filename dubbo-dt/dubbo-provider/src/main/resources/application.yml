@@ -1,0 +1,31 @@
+server:
+  port: ${PROVIDE_SERVICE:8001}
+
+spring:
+  application:
+    name: ${SPRING_APPLICATION_NAME:dubbo-provider-1}
+
+dubbo:
+  application:
+    name: ${spring.application.name}
+    qos-enable: false
+  cache:
+    base-path: ./.dubbo/${spring.application.name}
+    file:
+      enable: true
+  protocol:
+    name: tri
+    port: ${protocol.port:20880}
+    qos-enable: false
+  registry:
+    address: nacos://${NACOS_HOST:192.168.1.5}:8848
+    register-mode: instance
+    register-all: true
+  metadata-report:
+    address: nacos://${NACOS_HOST:192.168.1.5}:8848
+    cache-file: ${user.home}/.dubbo/${spring.application.name}/metadata.cache
+    report-mode: remote
+    sync-report: true
+  metadata:
+    service-exposure: true
+    export: true

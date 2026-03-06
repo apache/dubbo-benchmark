@@ -1,0 +1,25 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  application:
+    name: ${SPRING_APPLICATION_NAME:dubbo-agnet}
+agent:
+  loadbalacne: ${AGENT_LOCADBANCE:random}
+  durationSeconds: ${AGENT_DURATIONSECONDS:100}
+  requestCount: ${AGENT_REQUESTCOUNT:100}
+  serialization: ${AGENT_SERIALIZATION:hessian2}
+
+  test:
+    default-timeout-seconds: 300
+    max-concurrent-tests: 10
+
+logging:
+  level:
+    com.dubbo.dlt.agent: INFO
+    org.springframework.web: INFO
+  file:
+    name: logs/agent.log
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"

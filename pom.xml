@@ -65,7 +65,7 @@
         <module>native-grpc-server</module>
         <module>springcloud-server</module>
         <module>springcloud-client</module>
-
+        <module>dubbo-dt</module>
     </modules>
 
     <dependencyManagement>
